@@ -14,6 +14,10 @@ class Board
 		file = [1,2,3,4,5,6,7,8]
 	end
 
+	def pieceAtIndex (index)
+		return @board[index]
+	end
+
 	def updateBoard (from, to)
 		temp = @board[from]
 		@board[from] = "_"
@@ -21,24 +25,26 @@ class Board
 	end
 
 	def display
-		print "    "
+		puts ""
+		print "		    "
 		puts @rank[0..7].join(" ")
 		puts ""
-		print "1   "
+		print "		1   "
 		puts @board[0..7].join(" ")
-		print "2   "
+		print "		2   "
 		puts @board[8..15].join(" ")
-		print "3   "
+		print "		3   "
 		puts @board[16..23].join(" ")
-		print "4   "
+		print "		4   "
 		puts @board[24..31].join(" ")
-		print "5   "
+		print "		5   "
 		puts @board[32..39].join(" ")
-		print "6   "
+		print "		6   "
 		puts @board[40..47].join(" ")
-		print "7   "
+		print "		7   "
 		puts @board[48..55].join(" ")
-		print "8   "
+		print "		8   "
 		puts @board[56..63].join(" ")
+		puts ""
 	end
 end
