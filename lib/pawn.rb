@@ -2,7 +2,13 @@ class Pawn
 	def isLegal (from,to,black=false)
 		if (black)
 			if (from.between?(8,15))
-				if ((from-to).abs == 8 || (from-to).abs == 16)
+				if (to-from == 8 || to-from == 16)
+					return true
+				else
+					return false
+				end
+			else						# if the pawn is anywhere but the starting position, it can only move 1 square forward
+				if (to-from == 8)
 					return true
 				else
 					return false
@@ -10,7 +16,13 @@ class Pawn
 			end
 		else
 			if (from.between?(48,55))
-				if ((from-to).abs == 8 || (from-to).abs == 16)
+				if (from-to == 8 || from-to == 16)
+					return true
+				else
+					return false
+				end
+			else
+				if (from-to == 8)
 					return true
 				else
 					return false
