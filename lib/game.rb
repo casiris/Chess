@@ -100,6 +100,7 @@ g.gameLoop
 			# if it isn't legal, ask for input again
 			# if it is, update the board
 			# switch player
+<<<<<<< HEAD
 
 
 # for check/mate, and i guess in the future for ai, i'll need a function to check what threatens a given square
@@ -107,3 +108,5 @@ g.gameLoop
 # in that direction, ie, is there anything on any diagonal, and if so, is it a pawn 1 space away, or a bishop/queen
 # any distance away, etc
 # so, kinda like checking for connect four
+=======
+>>>>>>> 1d0c53e93e789bc8dcc88e5a79d0d3f6418fef56
