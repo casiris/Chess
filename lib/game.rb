@@ -6,6 +6,7 @@ class Game
 
 	def initialize
 		@board = Board.new
+		@pawn = Pawn.new
 		@coordinate = [ "a1","b1","c1","d1","e1","f1","g1","h1",
 						"a2","b2","c2","d2","e2","f2","g2","h2",
 						"a3","b3","c3","d3","e3","f3","g3","h3",
@@ -45,14 +46,24 @@ class Game
 		end
 	end
 
+	def movePiece (from,to,piece)
+		case piece
+		when "p"
+			@pawn.isLegal(from,to,true)
+		when "P"
+			@pawn.isLegal(from,to,false)
+		else
+		end
+	end
+
 	def gameLoop
 		@board.display
-		#p = Pawn.new
 		win = false
 
 		while (win == false)
 			puts "Enter a piece to move"
 			from = getInput
+
 			while (@board.pieceAtIndex(from) == "_")
 				puts "No piece at that position, try again"
 				from = getInput
@@ -62,7 +73,10 @@ class Game
 			puts "Enter where to move"
 			to = getInput
 
-			#puts p.isLegal(from,to,false)
+			while (movePiece(from,to,piece) == false)
+				puts "Can't move that piece there, try again"
+				to = getInput
+			end
 
 			@board.updateBoard(from,to)
 			@board.display
@@ -86,3 +100,10 @@ g.gameLoop
 			# if it isn't legal, ask for input again
 			# if it is, update the board
 			# switch player
+
+
+# for check/mate, and i guess in the future for ai, i'll need a function to check what threatens a given square
+# if i'm not mistaken, i'd just have to check in all 8 directions, and see if there's any applicable piece
+# in that direction, ie, is there anything on any diagonal, and if so, is it a pawn 1 space away, or a bishop/queen
+# any distance away, etc
+# so, kinda like checking for connect four
