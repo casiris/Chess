@@ -72,13 +72,16 @@ class Game
 
     def gameLoop
         @board.display
+        activePlayer = @playerWhite
         win = false
 
         while (win == false)
             puts "Enter a piece to move"
             from = getInput
+            puts from
 
-            while (@board.pieceAtIndex(from) == "_")
+            # make sure player isn't choose an empty square or a piece they don't own
+            while (@board.pieceAtIndex(from) == "_" || activePlayer.pieces.include?(from))
                 puts "No piece at that position, try again"
                 from = getInput
             end
@@ -90,6 +93,13 @@ class Game
             while (movePiece(from,to,piece) == false)
                 puts "Can't move that piece there, try again"
                 to = getInput
+            end
+
+            # switch player turn
+            if (activePlayer == @playerWhite)
+                activePlayer = @playerBlack
+            else
+                activePlayer = @playerWhite
             end
 
             @board.updateBoard(from,to)
@@ -121,3 +131,13 @@ g.gameLoop
 # in that direction, ie, is there anything on any diagonal, and if so, is it a pawn 1 space away, or a bishop/queen
 # any distance away, etc
 # so, kinda like checking for connect four
+
+
+# white moves
+# make sure white can only move white pieces
+# i guess instead of keeping track of indicies, i could use ascii codes to determine which piece belongs to who
+# like, if the ascii code is between x-y it's lowercase, and x1-y1 is upppercase
+# if a player moves a piece to a square that's not empty, check if it's an opposing pieceAtIndex
+# if it is, call the capture function on the piece that was moved
+
+# need to print out "white move" or whatever to show which player's turn it is
