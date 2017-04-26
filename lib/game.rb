@@ -7,19 +7,10 @@ class Game
 
     def initialize
         @board = Board.new
-
         # each player has an array of which pieces belong to it
         # will need to update those arrays as pieces move around
-        @playerWhite = Player.new
-        for i in 0..15
-            @playerWhite.pieces << i
-        end
-
-        @playerBlack = Player.new
-        for i in 48..63
-            @playerBlack.pieces << i
-        end
-
+        @playerWhite = Player.new("White",0..15)
+        @playerBlack = Player.new("Black",48..63)
         @pawn = Pawn.new
         @coordinate = [ "a1","b1","c1","d1","e1","f1","g1","h1",
                         "a2","b2","c2","d2","e2","f2","g2","h2",
@@ -76,11 +67,10 @@ class Game
         win = false
 
         while (win == false)
-            puts "Enter a piece to move"
+            puts "Player #{activePlayer.name}, enter a piece to move"
             from = getInput
-            puts from
 
-            # make sure player isn't choose an empty square or a piece they don't own
+            # make sure player can't choose an empty square or a piece they don't own
             while (@board.pieceAtIndex(from) == "_" || activePlayer.pieces.include?(from))
                 puts "No piece at that position, try again"
                 from = getInput
@@ -90,9 +80,16 @@ class Game
             puts "Enter where to move"
             to = getInput
 
-            while (movePiece(from,to,piece) == false)
-                puts "Can't move that piece there, try again"
-                to = getInput
+            # at this point, check if to is an empty square or a square with an opposing piece
+            # if empty, call piece's isLegal function
+            # if opposing piece, call piece's capture function
+            if (@board.pieceAtIndex(to) == "_")
+                while (movePiece(from,to,piece) == false)
+                    puts "Can't move that piece there, try again"
+                    to = getInput
+                end
+            elsif (!activePlayer.pieces.include?(to))
+                puts "capture"
             end
 
             # switch player turn
@@ -135,9 +132,7 @@ g.gameLoop
 
 # white moves
 # make sure white can only move white pieces
-# i guess instead of keeping track of indicies, i could use ascii codes to determine which piece belongs to who
-# like, if the ascii code is between x-y it's lowercase, and x1-y1 is upppercase
-# if a player moves a piece to a square that's not empty, check if it's an opposing pieceAtIndex
+    # i guess instead of keeping track of indicies, i could use ascii codes to determine which piece belongs to who
+    # like, if the ascii code is between x-y it's lowercase, and x1-y1 is upppercase
+# if a player moves a piece to a square that's not empty, check if it's an opposing piece
 # if it is, call the capture function on the piece that was moved
-
-# need to print out "white move" or whatever to show which player's turn it is
