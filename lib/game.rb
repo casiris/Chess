@@ -7,10 +7,8 @@ class Game
 
     def initialize
         @board = Board.new
-        # each player has an array of which pieces belong to it
-        # will need to update those arrays as pieces move around
-        @playerWhite = Player.new("White",0..15)
-        @playerBlack = Player.new("Black",48..63)
+        @playerWhite = Player.new("White","A".ord.."Z".ord)     # ascii code of upper and lower case numbers
+        @playerBlack = Player.new("Black","a".ord.."z".ord)
         @pawn = Pawn.new
         @coordinate = [ "a1","b1","c1","d1","e1","f1","g1","h1",
                         "a2","b2","c2","d2","e2","f2","g2","h2",
@@ -20,6 +18,18 @@ class Game
                         "a6","b6","c6","d6","e6","f6","g6","h6",
                         "a7","b7","c7","d7","e7","f7","g7","h7",
                         "a8","b8","c8","d8","e8","f8","g8","h8"]
+    end
+
+    def getFrom (player)
+        puts "Player #{player.name}, enter a piece to move"
+        from = getInput
+
+        # make sure player can't choose an empty square or a piece they don't own
+        while (@board.pieceAtIndex(from) == "_" || !player.pieces.include?(@board.pieceAtIndex(from).ord))
+            puts "No piece at that position, try again"
+            from = getInput
+        end
+        return from
     end
 
     def getInput
@@ -33,7 +43,7 @@ class Game
     end
 
     def convertRankFile (coord)
-        if (@coordinate.include? coord.downcase)
+        if (@coordinate.include?(coord.downcase))
             return @coordinate.index(coord.downcase)
         else
             return -1
@@ -67,29 +77,21 @@ class Game
         win = false
 
         while (win == false)
-            puts "Player #{activePlayer.name}, enter a piece to move"
-            from = getInput
-
-            # make sure player can't choose an empty square or a piece they don't own
-            while (@board.pieceAtIndex(from) == "_" || activePlayer.pieces.include?(from))
-                puts "No piece at that position, try again"
-                from = getInput
-            end
+            from = getFrom(activePlayer)
             piece = @board.pieceAtIndex(from)
 
             puts "Enter where to move"
             to = getInput
 
-            # at this point, check if to is an empty square or a square with an opposing piece
-            # if empty, call piece's isLegal function
-            # if opposing piece, call piece's capture function
-            if (@board.pieceAtIndex(to) == "_")
-                while (movePiece(from,to,piece) == false)
-                    puts "Can't move that piece there, try again"
-                    to = getInput
-                end
-            elsif (!activePlayer.pieces.include?(to))
-                puts "capture"
+            # make sure player can't make an invalid move, or move to a square already occupied by their own piece
+            # then, allow player to choose another piece instead
+            while (movePiece(from,to,piece) == false || activePlayer.pieces.include?(@board.pieceAtIndex(to).ord))
+                puts "Can't move that piece there"
+
+                from = getFrom(activePlayer)
+                piece = @board.pieceAtIndex(from)
+                puts "Enter where to move"
+                to = getInput
             end
 
             # switch player turn
