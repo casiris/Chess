@@ -64,9 +64,18 @@ class Game
     def movePiece (from,to,piece)
         case piece
         when "p"
-            @pawn.isLegal(from,to,true)
+            # make sure pawns can only move forward to an empty space
+            if (@board.pieceAtIndex(to) == "_")
+                @pawn.isLegal(from,to,true)
+            else
+                @pawn.capture(from,to,true)
+            end
         when "P"
-            @pawn.isLegal(from,to,false)
+            if (@board.pieceAtIndex(to) == "_")
+                @pawn.isLegal(from,to,false)
+            else
+                @pawn.capture(from,to,false)
+            end
         else
         end
     end
