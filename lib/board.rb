@@ -2,26 +2,36 @@ class Board
     attr_accessor :board
 
     def initialize
-        @board = ["r","n","b","q","k","b","n","r",
-                  "p","p","p","p","p","p","p","p",
-                  "_","_","_","_","_","_","_","_",
-                  "_","_","_","_","_","_","_","_",
-                  "_","_","_","_","_","_","_","_",
-                  "_","_","_","_","_","_","_","_",
-                  "P","P","P","P","P","P","P","P",
-                  "R","N","B","Q","K","B","K","R"]
+        @board = [["r","n","b","q","k","b","n","r"],
+                  ["p","p","p","p","p","p","p","p"],
+                  ["_","_","_","_","_","_","_","_"],
+                  ["_","_","_","_","_","_","_","_"],
+                  ["_","_","_","_","_","_","_","_"],
+                  ["_","_","_","_","_","_","_","_"],
+                  ["P","P","P","P","P","P","P","P"],
+                  ["R","N","B","Q","K","B","K","R"]]
         @rank = ["a","b","c","d","e","f","g","h"]
         file = [1,2,3,4,5,6,7,8]
     end
 
+    def convert (position)
+        # this takes the 0-63 index of the 1d array and does math to get the x/y index instead
+        x = position / 8
+        y = position % 8
+        return [x,y]
+    end
+
     def pieceAtIndex (index)
-        return @board[index]
+        pos = convert(index)
+        return @board[pos[0]][pos[1]]
     end
 
     def updateBoard (from, to)
-        temp = @board[from]
-        @board[from] = "_"
-        @board[to] = temp
+        newFrom = convert(from)
+        newTo = convert(to)
+        temp = @board[newFrom[0]][newFrom[1]]
+        @board[newFrom[0]][newFrom[1]] = "_"
+        @board[newTo[0]][newTo[1]] = temp
     end
 
     def display
@@ -29,22 +39,15 @@ class Board
         print "         "
         puts @rank[0..7].join(" ")
         puts ""
-        print "     1   "
-        puts @board[0..7].join(" ")
-        print "     2   "
-        puts @board[8..15].join(" ")
-        print "     3   "
-        puts @board[16..23].join(" ")
-        print "     4   "
-        puts @board[24..31].join(" ")
-        print "     5   "
-        puts @board[32..39].join(" ")
-        print "     6   "
-        puts @board[40..47].join(" ")
-        print "     7   "
-        puts @board[48..55].join(" ")
-        print "     8   "
-        puts @board[56..63].join(" ")
+
+        for i in 0..@board.length-1
+            print "     #{i+1}   "
+            puts @board[i][0..7].join(" ")
+        end
+
         puts ""
     end
 end
+
+# b = Board.new
+# b.display
