@@ -79,9 +79,9 @@ class Game
                 @pawn.capture(from,to,false)
             end
         when "r"
-            @rook.isLegal(from,to)
+            @rook.isLegal(from,to,@board.board)
         when "R"
-            @rook.isLegal(from,to)
+            @rook.isLegal(from,to,@board.board)
         else
         end
     end
@@ -124,7 +124,6 @@ end
 
 g = Game.new
 g.gameLoop
-
 
 # for check/mate, and i guess in the future for ai, i'll need a function to check what threatens a given square
 # if i'm not mistaken, i'd just have to check in all 8 directions, and see if there's any applicable piece
