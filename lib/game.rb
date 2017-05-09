@@ -8,8 +8,8 @@ class Game
 
     def initialize
         @board = Board.new
-        @playerWhite = Player.new("White","A".ord.."Z".ord)     # ascii code of upper and lower case numbers
-        @playerBlack = Player.new("Black","a".ord.."z".ord)
+        @playerWhite = Player.new("White","\u265A".."\u265F")     # unicode of black/white chess pieces
+        @playerBlack = Player.new("Black","\u2654".."\u2659")
         @pawn = Pawn.new
         @rook = Rook.new
         @coordinate = [ "a1","b1","c1","d1","e1","f1","g1","h1",
@@ -27,7 +27,7 @@ class Game
         from = getInput
 
         # make sure player can't choose an empty square or a piece they don't own
-        while (@board.pieceAtIndex(from) == "_" || !player.pieces.include?(@board.pieceAtIndex(from).ord))
+        while (@board.pieceAtIndex(from) == "_" || !player.pieces.include?(@board.pieceAtIndex(from)))
             puts "No piece at that position, try again"
             from = getInput
         end
