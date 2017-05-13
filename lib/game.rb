@@ -2,6 +2,7 @@ require_relative "board"
 require_relative "player"
 require_relative "pawn"
 require_relative "rook"
+require_relative "knight"
 
 class Game
     #attr_accessor :board, :coordinate
@@ -12,6 +13,7 @@ class Game
         @playerBlack = Player.new("Black","\u2654".."\u2659")
         @pawn = Pawn.new
         @rook = Rook.new
+        @knight = Knight.new
         @coordinate = [ "a1","b1","c1","d1","e1","f1","g1","h1",
                         "a2","b2","c2","d2","e2","f2","g2","h2",
                         "a3","b3","c3","d3","e3","f3","g3","h3",
@@ -64,24 +66,30 @@ class Game
     end
 
     def movePiece (from,to,piece)
+        #puts "hey: #{piece}"
         case piece
-        when "p"
+        when "♙"        # black pawn
             # make sure pawns can only move forward to an empty space
             if (@board.pieceAtIndex(to) == "_")
                 @pawn.isLegal(from,to,true)
             else
                 @pawn.capture(from,to,true)
             end
-        when "P"
+        when "♟"        # white pawn
             if (@board.pieceAtIndex(to) == "_")
                 @pawn.isLegal(from,to,false)
             else
                 @pawn.capture(from,to,false)
             end
-        when "r"
+        when "♖"        # black rook
             @rook.isLegal(from,to,@board.board)
-        when "R"
+        when "♜"        # white rook
+            #puts "white rook"
             @rook.isLegal(from,to,@board.board)
+        when "♘"        # black knight
+            @knight.isLegal(from,to)
+        when "♞"        # white knight
+            @knight.isLegal(from,to)
         else
         end
     end
@@ -100,7 +108,7 @@ class Game
 
             # make sure player can't make an invalid move, or move to a square already occupied by their own piece
             # then, allow player to choose another piece instead
-            while (movePiece(from,to,piece) == false || activePlayer.pieces.include?(@board.pieceAtIndex(to).ord))
+            while (movePiece(from,to,piece) == false || activePlayer.pieces.include?(@board.pieceAtIndex(to)))
                 puts "Can't move that piece there"
 
                 from = getFrom(activePlayer)
@@ -116,6 +124,9 @@ class Game
                 activePlayer = @playerWhite
             end
 
+            #puts "from: #{from}, to: #{to}"
+            #puts "#{@board.pieceAtIndex(from)}, #{@board.pieceAtIndex(to)}"
+
             @board.updateBoard(from,to)
             @board.display
         end
@@ -124,6 +135,7 @@ end
 
 g = Game.new
 g.gameLoop
+
 
 # for check/mate, and i guess in the future for ai, i'll need a function to check what threatens a given square
 # if i'm not mistaken, i'd just have to check in all 8 directions, and see if there's any applicable piece
