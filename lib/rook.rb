@@ -4,7 +4,7 @@ class Rook
 		fromY = from % 8
 		toX = to / 8
 		toY = to % 8
-		piece = board[fromX][fromY]		# so we can know which pieces are allied and which are enemies
+		#piece = board[fromX][fromY]		# so we can know which pieces are allied and which are enemies
 		path = []
 
 		if (toY-fromY == 0)
@@ -37,14 +37,14 @@ class Rook
 			end
 		else
 			# if the change in both x and y positions are both nonzero, then that's already an illegal move 
-			# because knight can only move in a straight horizontal or vertical
+			# because rook can only move in a straight horizontal or vertical
 			return false
 		end
-		clearPath(path)
+		checkPath(path)
 	end
 
-	def clearPath (path)
-		# ignore first element in path, because that is the piece we're moving
+	def checkPath (path)
+		# ignore first element in path, because that's the piece we're moving
 		for i in 1..path.length-2
 			if (path[i] != "_")
 				return false
