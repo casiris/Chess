@@ -15,7 +15,7 @@ class Board
     end
 
     def convert (position)
-        # this takes the 0-63 index of the 1d array and does math to get the x/y index instead
+        # take the 0-63 index of the 1d array and do math to get the x/y index instead
         x = position / 8
         y = position % 8
         return [x,y]
