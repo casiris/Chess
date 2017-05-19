@@ -3,6 +3,7 @@ require_relative "player"
 require_relative "pawn"
 require_relative "rook"
 require_relative "knight"
+require_relative "bishop"
 
 class Game
     #attr_accessor :board, :coordinate
@@ -14,6 +15,7 @@ class Game
         @pawn = Pawn.new
         @rook = Rook.new
         @knight = Knight.new
+        @bishop = Bishop.new
         @coordinate = [ "a1","b1","c1","d1","e1","f1","g1","h1",
                         "a2","b2","c2","d2","e2","f2","g2","h2",
                         "a3","b3","c3","d3","e3","f3","g3","h3",
@@ -90,6 +92,10 @@ class Game
             @knight.isLegal(from,to)
         when "♞"        # white knight
             @knight.isLegal(from,to)
+        when "♝"        # white bishop
+            @bishop.isLegal(from,to,@board.board)
+        when "♗"        # black bishop
+            @bishop.isLegal(from,to,@board.board)
         else
         end
     end
