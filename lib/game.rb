@@ -4,6 +4,8 @@ require_relative "pawn"
 require_relative "rook"
 require_relative "knight"
 require_relative "bishop"
+require_relative "queen"
+require_relative "king"
 
 class Game
     #attr_accessor :board, :coordinate
@@ -16,6 +18,8 @@ class Game
         @rook = Rook.new
         @knight = Knight.new
         @bishop = Bishop.new
+        @queen = Queen.new
+        @king = King.new
         @coordinate = [ "a1","b1","c1","d1","e1","f1","g1","h1",
                         "a2","b2","c2","d2","e2","f2","g2","h2",
                         "a3","b3","c3","d3","e3","f3","g3","h3",
@@ -96,6 +100,14 @@ class Game
             @bishop.isLegal(from,to,@board.board)
         when "♗"        # black bishop
             @bishop.isLegal(from,to,@board.board)
+        when "♛"         # white queen
+            @queen.isLegal(from,to,@board.board)
+        when "♕"         # black queen
+            @queen.isLegal(from,to,@board.board)
+        when "♚"         # white king
+            @king.isLegal(from,to)
+        when "♔"         # black king
+            @king.isLegal(from,to)
         else
         end
     end
@@ -130,7 +142,7 @@ class Game
                 activePlayer = @playerWhite
             end
 
-            #puts "from: #{from}, to: #{to}"
+            puts "from: #{from}, to: #{to}"
             #puts "#{@board.pieceAtIndex(from)}, #{@board.pieceAtIndex(to)}"
 
             @board.updateBoard(from,to)
