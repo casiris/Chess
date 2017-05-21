@@ -26,6 +26,16 @@ class Board
         return @board[pos[0]][pos[1]]
     end
 
+    def indexOf (piece)
+        for x in 0..7
+            for y in 0..7
+                if (@board[x][y] == piece)
+                    return [x,y]
+                end
+            end
+        end
+    end
+
     def updateBoard (from, to)
         newFrom = convert(from)
         newTo = convert(to)
@@ -51,4 +61,4 @@ end
 
 # b = Board.new
 # b.display
-# puts b.pieceAtIndex(7)
+# puts b.pieceAtIndex(63)
