@@ -71,8 +71,17 @@ class Game
         end
     end
 
+    def switchPlayer (player)
+        if (player == @playerWhite)
+            player = @playerBlack
+            return player
+        else
+            player = @playerBlack
+            return player
+        end
+    end
+
     def movePiece (from,to,piece)
-        #puts "hey: #{piece}"
         case piece
         when "♙"        # black pawn
             # make sure pawns can only move forward to an empty space
@@ -112,9 +121,36 @@ class Game
         end
     end
 
+    def inCheck (player)
+        kingPos = @board.indexOf(player.pieces[0])
+
+        # switch player to check the opposite player's pieces
+        player = switchPlayer(player)
+
+        # this should work, but it looks along the entire vertical
+        # when it's possible one of your own pieces is blocking an opposing piece
+        # for i in 0..7
+        #     # check vertical
+        #     if (@board.pieceAtIndex(i*8+kingPos[1]) == player.pieces[1] || @board.pieceAtIndex(i*8+kingPos[1]) == player.pieces[2])
+        #         puts "queen or rook on the vertical"
+        #     elsif
+        #     end 
+        # end
+
+        # need to check all 8 directions plus the 8 spaces for a knight from the king's position
+        # then check if there's any threatening piece in that range
+
+        # acutally, i think it'd be easier to check squares on a piece-by-piece basis
+        # as in, check the two diagonal "forward" squares for opposite pawns
+        # check the diagonals for bishops or a queen
+        # check horizontal/vertical for rooks or a queen
+        # and check the 8 squares for a knight
+    end
+
     def gameLoop
         @board.display
         activePlayer = @playerWhite
+        #inCheck (activePlayer)
         win = false
 
         while (win == false)
@@ -136,13 +172,9 @@ class Game
             end
 
             # switch player turn
-            if (activePlayer == @playerWhite)
-                activePlayer = @playerBlack
-            else
-                activePlayer = @playerWhite
-            end
+           activePlayer = switchPlayer(activePlayer)
 
-            puts "from: #{from}, to: #{to}"
+            #puts "from: #{from}, to: #{to}"
             #puts "#{@board.pieceAtIndex(from)}, #{@board.pieceAtIndex(to)}"
 
             @board.updateBoard(from,to)
