@@ -76,7 +76,7 @@ class Game
             player = @playerBlack
             return player
         else
-            player = @playerBlack
+            player = @playerWhite
             return player
         end
     end
@@ -121,36 +121,28 @@ class Game
         end
     end
 
-    def inCheck (player)
-        kingPos = @board.indexOf(player.pieces[0])
+    def inCheck (player,lastMove)
+        piece = @board.pieceAtIndex(lastMove)
+        lastMoveX = lastMove / 8
+        lastMoveY = lastMove % 8
 
-        # switch player to check the opposite player's pieces
-        player = switchPlayer(player)
+        # black pawn
+        if (piece == "♙")
+            if (@board.board[lastMoveX+1][lastMoveY+1] == player.pieces[0] || @board.board[lastMoveX+1][lastMoveY-1] == player.pieces[0])
+                puts "king in check oh ono"
+            end
+        elsif (piece == "♟")
+            if ()
+            end
+        end
 
-        # this should work, but it looks along the entire vertical
-        # when it's possible one of your own pieces is blocking an opposing piece
-        # for i in 0..7
-        #     # check vertical
-        #     if (@board.pieceAtIndex(i*8+kingPos[1]) == player.pieces[1] || @board.pieceAtIndex(i*8+kingPos[1]) == player.pieces[2])
-        #         puts "queen or rook on the vertical"
-        #     elsif
-        #     end 
-        # end
-
-        # need to check all 8 directions plus the 8 spaces for a knight from the king's position
-        # then check if there's any threatening piece in that range
-
-        # acutally, i think it'd be easier to check squares on a piece-by-piece basis
-        # as in, check the two diagonal "forward" squares for opposite pawns
-        # check the diagonals for bishops or a queen
-        # check horizontal/vertical for rooks or a queen
-        # and check the 8 squares for a knight
+        # what seems easiest is to get the piece that moved last and check which squares it threatens
+        # and if the opposite king falls into that range, it's check
     end
 
     def gameLoop
         @board.display
         activePlayer = @playerWhite
-        #inCheck (activePlayer)
         win = false
 
         while (win == false)
@@ -172,13 +164,14 @@ class Game
             end
 
             # switch player turn
-           activePlayer = switchPlayer(activePlayer)
+            activePlayer = switchPlayer(activePlayer)
 
             #puts "from: #{from}, to: #{to}"
             #puts "#{@board.pieceAtIndex(from)}, #{@board.pieceAtIndex(to)}"
 
             @board.updateBoard(from,to)
             @board.display
+            inCheck(activePlayer,to)
         end
     end
 end
