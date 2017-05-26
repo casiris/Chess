@@ -1,11 +1,18 @@
-class Pawn
-	attr_reader :color, :type
-	def initialize (color)
-		@color = color
+require_relative 'piece'
+
+class Pawn < Piece
+
+	def initialize (color,unicode)
+		super
 		@type = "Pawn"
+		@unicode = unicode
 	end
 
 	def toString
-		"#{@color} #{@type}"
+		super
 	end
 end
+
+# p = Pawn.new("Blue","\u2659")
+# puts p.toString
+# puts p.unicode

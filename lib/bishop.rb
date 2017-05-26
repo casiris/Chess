@@ -1,5 +1,15 @@
-class Bishop
-	
+require_relative "piece"
+
+class Bishop < Piece
+	def initialize (color,unicode)
+		super
+		@type = "Bishop"
+		@unicode = unicode
+	end
+
+	def toString
+		super
+	end
 end
 
 # bishop can move [1,1], [1,-1], [-1, 1], or [-1,-1]
