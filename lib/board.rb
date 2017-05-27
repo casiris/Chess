@@ -29,6 +29,7 @@ class Board
         		  [],
         		  [wPawn,wPawn,wPawn,wPawn,wPawn,wPawn,wPawn,wPawn],
         		  [wRook,wKnight,wBishop,wQueen,wKing,wBishop,wKnight,wRook]]
+        @file = ["a","b","c","d","e","f","g","h"]
     end
 
     def pieceAtIndex (x,y)
@@ -40,13 +41,31 @@ class Board
         end
     end
 
+    def update (fromX,fromY,toX,toY)
+        temp = @board[fromY][fromX]
+        @board[fromY][fromX] = nil
+        @board[toY][toX] = temp
+    end
+
     def display
-        puts @board[0][1].unicode
-        # can't puts unicode of a range (needs to be an actual method)
-        # but i probably want to do it a different way anyway, because the middle of the board is nil
+        puts "    #{@file.join(" ")}"     # print file
+        puts ""
+        for x in 0..7
+            print "#{x+1} "      # print rank
+            for y in 0..7
+                if (@board[x][y] != nil)
+                    print " #{@board[x][y].unicode}"
+                else
+                    print " _"
+                end
+            end
+            puts ""
+        end
     end
 end
 
 b = Board.new
 puts b.pieceAtIndex(1,0)
+b.display
+b.update(0,1,0,3)
 b.display
