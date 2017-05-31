@@ -1,12 +1,15 @@
 class Player
-	attr_accessor :name, :pieces
+	attr_reader :color
 
-	def initialize (name,position)
-		@name = name
-		@pieces = []
-		
-		position.each do |i|
-			@pieces << i
-		end
+	def initialize (color)
+		@color = color
+	end
+
+	def test
+		puts @color
 	end
 end
+
+p = Player.new("Blue")
+puts p
+puts p.color
