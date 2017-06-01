@@ -17,38 +17,43 @@ class Game
 	end
 
 	def getFrom (player)
-		b = true
-		while (b)
+		checkInput = true
+		while (checkInput)
 			puts "Player #{player.color}, enter a piece to move"
 			input = gets.chomp
 
+			# get index of given rank/file
 			if (@coordinate.include?(input.downcase))
 				coord = @coordinate.index(input.downcase)
 			else
-				puts "outside of coordinate range"
+				puts "Outside of coordinate range"
 			end
 
+			# divide index by 8 to get x, %8 to get y
 			piece = @board.pieceAtIndex(coord/8,coord%8)
 
 			if (piece != nil)
-				if (piece.color == player.color)			# for some reason this is still checked even when piece is null
-					puts "yay"
-					b = false
+				if (piece.color == player.color)
+					checkInput = false
+					return coord
 				else
-					puts "not your piece"
+					puts "You don't control that piece"
 				end
 			else
 				puts "No piece at that position"
 			end
 		end
 	end
+
+	def gameLoop
+	end
 end
 
 
-# need to loop asking for input and validating it until a valid input is given
-# something like puts "Enter a piece to move as a coordinate"
-	# needs to check if there is a piece there, and if that piece belongs to the current player
+# probably want to move the rank/file conversion and some other things to their own functions
+# so they can be reused in getTo, so i don't have to rewrite the same logic twice
+# so, validate input incrementally like i did in the first place
 
 p = Player.new("White")
 g = Game.new
-g.getFrom(p)
+puts g.getFrom(p)
