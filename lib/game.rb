@@ -29,8 +29,7 @@ class Game
 				puts "Outside of coordinate range"
 			end
 
-			# divide index by 8 to get x, %8 to get y
-			piece = @board.pieceAtIndex(coord/8,coord%8)
+			piece = @board.pieceAtIndex(coord)
 
 			if (piece != nil)
 				if (piece.color == player.color)
@@ -45,7 +44,54 @@ class Game
 		end
 	end
 
+	def getTo (from)
+		checkInput = true
+		while (checkInput)
+			puts "Pick a place to move to"
+			input = gets.chomp
+
+			if (@coordinate.include?(input.downcase))
+				coord = @coordinate.index(input.downcase)
+
+				# just to test board update for now
+				checkInput = true
+				return coord
+			else
+				puts "Outside of coordinate range"
+			end
+
+
+			# then call the piece's isLegal function, give it the from/to, and determine whether the play can make that move
+			# if they can, return coord (as to)
+			# if they can't, ask them to move a different piece and call getFrom again
+		end
+	end
+
+	def switchPlayer (player)
+		if (player.color == "White")
+			return @playerBlack
+		else
+			return @playerWhite
+		end
+	end
+
 	def gameLoop
+		activePlayer = @playerWhite
+		checkmate = false
+
+		@board.display
+
+		while (!checkmate)
+			from = getFrom(activePlayer)
+			to = getTo(from)
+
+			puts "#{from}, #{to}"
+
+			activePlayer = switchPlayer(activePlayer)
+
+			@board.update(from,to)
+			@board.display
+		end
 	end
 end
 
@@ -54,6 +100,5 @@ end
 # so they can be reused in getTo, so i don't have to rewrite the same logic twice
 # so, validate input incrementally like i did in the first place
 
-p = Player.new("White")
 g = Game.new
-puts g.getFrom(p)
+g.gameLoop
