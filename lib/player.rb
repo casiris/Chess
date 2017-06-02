@@ -9,7 +9,3 @@ class Player
 		puts @color
 	end
 end
-
-p = Player.new("Blue")
-puts p
-puts p.color
