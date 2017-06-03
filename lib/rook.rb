@@ -6,8 +6,4 @@ class Rook < Piece
 		@type = "Rook"
 		@unicode = unicode
 	end
-
-	def toString
-		super
-	end
 end

@@ -6,8 +6,4 @@ class Knight < Piece
 		@type = "Knight"
 		@unicode = unicode
 	end
-
-	def toString
-		super
-	end
 end

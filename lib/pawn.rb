@@ -7,12 +7,4 @@ class Pawn < Piece
 		@type = "Pawn"
 		@unicode = unicode
 	end
-
-	def toString
-		super
-	end
 end
-
-# p = Pawn.new("Blue","\u2659")
-# puts p.toString
-# puts p.unicode

@@ -6,8 +6,4 @@ class Queen < Piece
 		@type = "Queen"
 		@unicode = unicode
 	end
-
-	def toString
-		super
-	end
 end
