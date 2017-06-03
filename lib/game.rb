@@ -27,6 +27,7 @@ class Game
 				coord = @coordinate.index(input.downcase)
 			else
 				puts "Outside of coordinate range"
+				redo		# start loop over so we don't continue with an invalid/nil position
 			end
 
 			piece = @board.pieceAtIndex(coord)
@@ -44,7 +45,7 @@ class Game
 		end
 	end
 
-	def getTo (from)
+	def getTo (from,player)
 		checkInput = true
 		while (checkInput)
 			puts "Pick a place to move to"
@@ -52,18 +53,23 @@ class Game
 
 			if (@coordinate.include?(input.downcase))
 				coord = @coordinate.index(input.downcase)
-
-				# just to test board update for now
-				checkInput = true
-				return coord
 			else
 				puts "Outside of coordinate range"
+				redo
 			end
 
 
-			# then call the piece's isLegal function, give it the from/to, and determine whether the play can make that move
+			# then call the piece's isLegal function, give it the from/to, and determine whether the player can make that move
+			piece = @board.pieceAtIndex(from)
 			# if they can, return coord (as to)
 			# if they can't, ask them to move a different piece and call getFrom again
+			if (piece.isLegal(from,coord) == true)
+				checkInput = true
+				return coord
+			else
+				puts "Can't move that piece there. Pick a different piece"
+				from = getFrom (player)
+			end
 		end
 	end
 
@@ -83,9 +89,7 @@ class Game
 
 		while (!checkmate)
 			from = getFrom(activePlayer)
-			to = getTo(from)
-
-			puts "#{from}, #{to}"
+			to = getTo(from,activePlayer)
 
 			activePlayer = switchPlayer(activePlayer)
 
