@@ -72,5 +72,3 @@ class Board
         puts ""
     end
 end
-
-# update is kinda messy. it'd be nice to have just from/to. could do it with an array from[0]/from[1], or do math, or something else maybe
