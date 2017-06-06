@@ -10,6 +10,22 @@ class Piece
 		"#{@color} #{@type}"
 	end
 
+	def isLegal (from,to,board)
+		return true		# just a placeholder
+
+		# this will call each individual piece's addToPath functions, even though it doesn't exist in Piece
+		# addToPath(from,to,board)
+
+		# i guess what i should do is have another function that adds pieces to a path
+		# and isLegal loops through that path and checks if there's an obstruction
+
+		# the addToPath function would add differently depending on the type of piece. rooks would go up down left right, bishop on the diagonals, etc
+		# and then a different function could check that path to see if the king is in the way, and if there are no obstructions, that'd be check
+
+		# "north" is [-1,0], "east" is [0,1], etc. i might could add the direction to the piece's position to get the path
+		# and then repeat for every direction necessary
+	end
+
 	# [-1,0]
 	def north (posX,posY,board)
 		northPath = []
@@ -51,41 +67,58 @@ class Piece
 	end
 
 	# [-1,1]
-	# if we start at the lower right corner (white rook), this works fine
-	# but from any other position, we loop back around to the other side of the board
-	# probably something to do with the loop bounds
 	def northEast (posX,posY,board)
 		northEastPath = []
+		x = posX-1
+		y = posY+1
 
-		for i in 1..7
-			puts board[posX-i][posY+i]
+		while (x >= 0 && y <= 7)
+			northEastPath << board[x][y]
+			x -= 1
+			y += 1
 		end
-		#return northEastPath
+		return northEastPath
 	end
 
 	# [-1,-1]
-	# def northWest (posX,posY,board)
-	# 	northWestPath = []
+	def northWest (posX,posY,board)
+		northWestPath = []
+		x = posX-1
+		y = posY-1
 
-	# 	for i in 1..7
-	# 		puts board[posX-i][posY-1]
-	# 	end
-	# 	#return northWestPath
-	# end
+		while (x >= 0 && y >= 0)
+			northWestPath << board[x][y]
+			x -= 1
+			y -= 1
+		end
+		return northWestPath
+	end
 
-	def isLegal (from,to,board)
-		return true		# just a placeholder
+	# [1,1]
+	def southEast (posX,posY,board)
+		southEastPath = []
+		x = posX+1
+		y = posY+1
 
-		# this will call each individual piece's addToPath functions, even though it doesn't exist in Piece
-		# addToPath(from,to,board)
+		while (x <= 7 && y <= 7)
+			southEastPath << board[x][y]
+			x += 1
+			y += 1
+		end
+		return southEastPath
+	end
 
-		# i guess what i should do is have another function that adds pieces to a path
-		# and isLegal loops through that path and checks if there's an obstruction
+	# [1,-1]
+	def southWest (posX,posY,board)
+		southWestPath = []
+		x = posX+1
+		y = posY-1
 
-		# the addToPath function would add differently depending on the type of piece. rooks would go up down left right, bishop on the diagonals, etc
-		# and then a different function could check that path to see if the king is in the way, and if there are no obstructions, that'd be check
-
-		# "north" is [-1,0], "east" is [0,1], etc. i might could add the direction to the piece's position to get the path
-		# and then repeat for every direction necessary
+		while (x <= 7 && y >= 0)
+			southWestPath << board[x][y]
+			x += 1
+			y -= 1
+		end
+		return southWestPath
 	end
 end
