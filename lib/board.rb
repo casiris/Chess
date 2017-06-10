@@ -36,6 +36,7 @@ class Board
         # do math to get the x/y position from the given 0-63 index
         x = position / 8
         y = position % 8
+
         if (@board[x][y] != nil)
             return @board[x][y]
         else

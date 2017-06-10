@@ -63,7 +63,7 @@ class Game
 			piece = @board.pieceAtIndex(from)
 			# if they can, return coord (as to)
 			# if they can't, ask them to move a different piece and call getFrom again
-			if (piece.isLegal(from,coord) == true)
+			if (piece.isLegal(from,coord,@board.board) == true)
 				checkInput = true
 				return coord
 			else
