@@ -4,6 +4,7 @@ class Piece
 	def initialize (color,unicode)
 		@color = color
 		@path = []
+		@board
 	end
 
 	def toString
@@ -11,99 +12,109 @@ class Piece
 	end
 
 	def isLegal (from,to,board)
-		#return true		# just a placeholder
+		@board = board
+		canMove = true
 
 		# this will call each individual piece's movePath functions, even though it doesn't exist in Piece
-		movePath(from,to,board)
+		movePath(from,to)
 
-		# we need to filter out all directions, except for the direction the player wants to move (using "to")
+		# need to loop through path to find obsructions
+		# but only up to the last element, because it's treated differently
+		for i in 0..@path.length-2
+			if @path[i] != nil
+				canMove = false
+			end
+		end
 
+		if (canMove == true)
+			if (@path[-1] != nil)
+				if (@path[-1].color != self.color)	# if the last element is path has a different color than the moved piece, it's allowed to move
+					return true
+				else
+					return false
+				end
+			else
+				return true
+			end
+		end
 
-		# then loop through each path and check for obstructions
-		# path.each do |i|
-		# 	i.each do |j|
-		# 		if (board[i][j] != nil)
-		# 			puts "can't move there"
-		# 		else
-		# 			puts "can move"
-		# 		end
-		# 	end
-		# end
+		# need to clear the path after we determine legality, so that there won't be leftover things when that piece moves again
+		@path = []
 	end
 
 	# [-1,0]
-	def north (posX,posY,board)
-		for i in 0..posX-1
-			@path << board[posX-i][posY]
+	def north (fromX,fromY,toX)
+		for i in toX..fromX-1
+			@path << @board[i][fromY]
 		end
 		@path.reverse!
 	end
 
 	# [1,0]
-	def south (posX,posY,board)
-		for i in posX+1..7
-			@path << board[posX+i][posY]
+	def south (fromX,fromY,toX)
+		for i in fromX+1..toX
+			@path << @board[i][fromY]
 		end
 	end
 
 	# [0,1]
-	def east (posX,posY,board)
-		for i in posY+1..7
-			@path << board[posX][posY+i]
+	def east (fromX,fromY,toY)
+		for i in fromY+1..toY
+			@path << @board[fromX][i]
 		end
 	end
 
 	# [0,-1]
-	def west (posX,posY,board)
-		for i in 0..posY-1
-			@path << board[posX][posY-i]
+	def west (fromX,fromY,toY)
+		for i in toY..fromY-1
+			@path << @board[fromX][i]
 		end
 		@path.reverse!
 	end
 
 	# [-1,1]
-	def northEast (posX,posY,board)
-		x = posX-1
-		y = posY+1
+	def northEast (fromX,fromY,toX,toY)
+		x = fromX-1
+		y = fromY+1
 
-		while (x >= 0 && y <= 7)
-			@path << board[x][y]
+		while (x >= toX && y <= toY)
+			@path << @board[x][y]
 			x -= 1
 			y += 1
 		end
 	end
 
 	# [-1,-1]
-	def northWest (posX,posY,board)
-		x = posX-1
-		y = posY-1
+	def northWest (fromX,fromY,toX,toY)
+		x = fromX-1
+		y = fromY-1
 
-		while (x >= 0 && y >= 0)
-			@path << board[x][y]
+		while (x >= toX && y >= toY)
+			@path << @board[x][y]
 			x -= 1
 			y -= 1
 		end
 	end
 
 	# [1,1]
-	def southEast (posX,posY,board)
-		x = posX+1
-		y = posY+1
+	def southEast (fromX,fromY,toX,toY)
+		x = fromX+1
+		y = fromY+1
 
 		while (x <= 7 && y <= 7)
-			@path << board[x][y]
+			@path << @board[x][y]
 			x += 1
 			y += 1
 		end
 	end
 
 	# [1,-1]
-	def southWest (posX,posY,board)
-		x = posX+1
-		y = posY-1
+	def southWest (fromX,fromY,toX,toY)
+		x = fromX+1
+		y = fromY-1
 
 		while (x <= 7 && y >= 0)
-			@path << board[x][y]
+			@path << @board[x][y]
 			x += 1
 			y -= 1
 		end
