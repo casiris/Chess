@@ -13,7 +13,14 @@ class Piece
 
 	def isLegal (from,to,board)
 		@board = board
-		canMove = true
+
+		# check to make sure moved piece can move to "to"
+		if (validateMove(from,to) == false)
+			return false
+		end
+
+		# need to clear the path before we use it to make sure there aren't leftover things from when that piece last moved
+		@path = []
 
 		# this will call each individual piece's movePath functions, even though it doesn't exist in Piece
 		movePath(from,to)
@@ -22,24 +29,23 @@ class Piece
 		# but only up to the last element, because it's treated differently
 		for i in 0..@path.length-2
 			if @path[i] != nil
-				canMove = false
+				return false
 			end
 		end
 
-		if (canMove == true)
-			if (@path[-1] != nil)
-				if (@path[-1].color != self.color)	# if the last element is path has a different color than the moved piece, it's allowed to move
-					return true
-				else
-					return false
-				end
-			else
+		return checkLastTileInPath(@path)
+	end
+
+	def checkLastTileInPath(path)
+		if (path[-1] != nil)
+			if (path[-1].color != self.color)
 				return true
+			else
+				return false
 			end
+		else
+			return true
 		end
-
-		# need to clear the path after we determine legality, so that there won't be leftover things when that piece moves again
-		@path = []
 	end
 
 	# [-1,0]
