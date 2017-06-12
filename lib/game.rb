@@ -14,6 +14,7 @@ class Game
                         "a6","b6","c6","d6","e6","f6","g6","h6",
                         "a7","b7","c7","d7","e7","f7","g7","h7",
                         "a8","b8","c8","d8","e8","f8","g8","h8"]
+        @from 		# needs to be global because of the way i handle input in getTo
 	end
 
 	def getFrom (player)
@@ -45,7 +46,7 @@ class Game
 		end
 	end
 
-	def getTo (from,player)
+	def getTo (player)
 		checkInput = true
 		while (checkInput)
 			puts "Pick a place to move to"
@@ -60,15 +61,15 @@ class Game
 
 
 			# then call the piece's isLegal function, give it the from/to, and determine whether the player can make that move
-			piece = @board.pieceAtIndex(from)
+			piece = @board.pieceAtIndex(@from)
 			# if they can, return coord (as to)
 			# if they can't, ask them to move a different piece and call getFrom again
-			if (piece.isLegal(from,coord,@board.board) == true)
+			if (piece.isLegal(@from,coord,@board.board) == true)
 				checkInput = true
 				return coord
 			else
 				puts "Can't move that piece there. Pick a different piece"
-				from = getFrom (player)
+				@from = getFrom (player)
 			end
 		end
 	end
@@ -88,12 +89,12 @@ class Game
 		@board.display
 
 		while (!checkmate)
-			from = getFrom(activePlayer)
-			to = getTo(from,activePlayer)
+			@from = getFrom(activePlayer)
+			to = getTo(activePlayer)
 
-			activePlayer = switchPlayer(activePlayer)
+			#activePlayer = switchPlayer(activePlayer)
 
-			@board.update(from,to)
+			@board.update(@from,to)
 			@board.display
 		end
 	end
