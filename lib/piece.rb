@@ -24,6 +24,7 @@ class Piece
 
 		# this will call each individual piece's movePath functions, even though it doesn't exist in Piece
 		movePath(from,to)
+		puts @path
 
 		# need to loop through path to find obsructions
 		# but only up to the last element, because it's treated differently
@@ -107,7 +108,7 @@ class Piece
 		x = fromX+1
 		y = fromY+1
 
-		while (x <= 7 && y <= 7)
+		while (x <= toX && y <= toY)
 			@path << @board[x][y]
 			x += 1
 			y += 1
@@ -119,7 +120,7 @@ class Piece
 		x = fromX+1
 		y = fromY-1
 
-		while (x <= 7 && y >= 0)
+		while (x <= toX && y >= toY)
 			@path << @board[x][y]
 			x += 1
 			y -= 1
