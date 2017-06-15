@@ -19,15 +19,15 @@ class Board
         wRook = Rook.new("White","\u265C")
         wKnight = Knight.new("White","\u265E")
         wBishop = Bishop.new("White","\u265D")
-        wQueen = Queen.new("White","\u265A")
-        wKing = King.new("White","\u265B")
+        wQueen = Queen.new("White","\u265B")
+        wKing = King.new("White","\u265A")
         @board = [[bRook,bKnight,bBishop,bQueen,bKing,bBishop,bKnight,bRook],
         		  [bPawn,bPawn,bPawn,bPawn,bPawn,bPawn,bPawn,bPawn],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
-        		  [wPawn,wPawn,wPawn,wPawn,wPawn,wPawn,wPawn,wPawn],
+        		  [nil,nil,wPawn,nil,nil,nil,nil,wPawn],
         		  [wRook,wKnight,wBishop,wQueen,wKing,wBishop,wKnight,wRook]]
         @file = ["a","b","c","d","e","f","g","h"]
     end
