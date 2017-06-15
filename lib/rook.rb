@@ -7,6 +7,22 @@ class Rook < Piece
 		@unicode = unicode
 	end
 
+	# constrain rook to cardinal directions only
+	def validateMove (from,to)
+		fromX = from / 8
+		fromY = from % 8
+		toX = to / 8
+		toY = to % 8
+
+		if (toX-fromX != 0 && toY-fromY == 0)
+			return true
+		elsif (toX-fromX == 0 && toY-fromY != 0)
+			return true
+		else
+			return false
+		end
+	end
+
 	def movePath (from,to)
 		fromX = from / 8
 		fromY = from % 8
@@ -28,3 +44,8 @@ class Rook < Piece
 		end
 	end
 end
+
+# rook can move anywhere, as long as the cardinal directions are clear
+# for instance, if moved out into the open middle, it can then move diagonally because there's no obstructions in the immediate NSEW
+# and bishop has been able to move wherever as well
+# so, movement isn't properly restrained
