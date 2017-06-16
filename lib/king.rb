@@ -13,12 +13,16 @@ class King < Piece
 		toX = to / 8
 		toY = to % 8
 
-		if ((fromX-toX).abs == 1 && fromY-toY == 0)
-			return true
-		elsif (fromX-toX == 0 && (fromY-toY).abs == 1)
-			return true
-		elsif ((fromX-toX).abs == (fromY-toY).abs && (fromX-toX).abs == 1)
-			return true
+		if (@board[toX][toY] == nil || @board[toX][toY].color != self.color)
+			if ((fromX-toX).abs == 1 && fromY-toY == 0)
+				return true
+			elsif (fromX-toX == 0 && (fromY-toY).abs == 1)
+				return true
+			elsif ((fromX-toX).abs == (fromY-toY).abs && (fromX-toX).abs == 1)
+				return true
+			else
+				return false
+			end
 		else
 			return false
 		end

@@ -15,9 +15,6 @@ class Queen < Piece
 		toX = to / 8
 		toY = to % 8
 
-		puts "from: #{fromX},#{fromY}"
-		puts "to: #{toX},#{toY}"
-
 		if (toX-fromX != 0 && toY-fromY == 0)
 			@diagonal = false
 			return true
@@ -42,31 +39,23 @@ class Queen < Piece
 
 		if (@diagonal == false)
 			if (fromX > toX)
-				puts "north"
 				north(fromX,fromY,toX)
 			elsif (fromX < toX)
-				puts "south"
 				south(fromX,fromY,toX)
 			end
 			if (fromY < toY)
-				puts "east"
 				east(fromX,fromY,toY)
 			elsif (fromY > toY)
-				puts "west"
 				west(fromX,fromY,toY)
 			end
 		else
 			if (dirX < 0 && dirY < 0)
-				puts "northwest"
 				northWest(fromX,fromY,toX,toY)
 			elsif (dirX < 0 && dirY > 0)
-				puts "northeast"
 				northEast(fromX,fromY,toX,toY)
 			elsif (dirY > 0 && dirY < 0)
-				puts "southwest"
 				southWest(fromX,fromY,toX,toY)
 			elsif (dirY > 0 && dirY > 0)
-				puts "southeast"
 				southEast(fromX,fromY,toX,toY)
 			end
 		end
