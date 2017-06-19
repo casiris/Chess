@@ -92,6 +92,14 @@ class Game
 			@from = getFrom(activePlayer)
 			to = getTo(activePlayer)
 
+			# the last piece to move. after it's made a legal move, check if it has put the opposite king in check
+			lastMove = @board.pieceAtIndex(@from)
+			if (lastMove.isCheck(to) == true)
+				puts "king in check"
+			else
+				puts "no check"
+			end
+
 			#activePlayer = switchPlayer(activePlayer)
 
 			@board.update(@from,to)
