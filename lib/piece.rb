@@ -20,10 +20,12 @@ class Piece
 		end
 
 		# need to clear the path before we use it to make sure there aren't leftover things from when that piece last moved
-		@path = []
+		@path = [[]]
 
 		# this will call each individual piece's movePath functions, even though it doesn't exist in Piece
-		movePath(from,to)
+		# if (self.type != "Pawn" || self.type != "Knight" || self.type != "King")
+		 	movePath(from,to)
+		# end
 
 		# need to loop through path to find obsructions
 		# but only up to the last element, because it's treated differently
@@ -41,8 +43,9 @@ class Piece
 	# if there's an obstruction, move onto the next array
 	# if you run into the opposite king with no obstructions, it's check
 	# if you go through every array and don't find the king, no check
-	def isCheck (from)
-		checkKing(from)
+	def isCheck (pos)
+		@path = []
+		kingPath(pos)
 
 		# check path for opposite king
 		for i in 0..@path.length-1
@@ -51,8 +54,6 @@ class Piece
 					puts @path[i][j].toString
 					if (@path[i][j].color != self.color && @path[i][j].type == "King")
 						return true
-					else
-						break
 					end
 				end
 			end
@@ -176,5 +177,39 @@ class Piece
 		end
 
 		@path << sw
+	end
+
+	def knightPath (pos)
+		kp = []
+		posX = pos / 8
+		posY = pos % 8
+
+		# need to make sure we don't go out of bounds
+		if (posX+1 <= 7 && posX+2 <= 7)
+			kp << @board[posX+1][posY+2]
+		end
+		if (posX+1 <= 7 && posY-2 >= 0)
+			kp << @board[posX+1][posY-2]
+		end
+		if (posX-1 >= 0 && posY+2 <= 7)
+			kp << @board[posX-1][posY+2]
+		end
+		if (posX-1 >= 0 && posY-2 >= 0)
+			kp << @board[posX-1][posY-2]
+		end
+		if (posX+2 <= 7 && posY+1 <= 7)
+			kp << @board[posX+2][posY+1]
+		end
+		if (posX+2 <= 7 && posY-1 >= 0)
+			kp << @board[posX+2][posY-1]
+		end
+		if (posX-2 >= 0 && posY+1 <= 7)
+			kp << @board[posX-2][posY+1]
+		end
+		if (posX-2 >= 0 && posY-1 >= 0)
+			kp << @board[posX-2][posY-1]
+		end
+
+		@path << kp
 	end
 end
