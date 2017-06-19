@@ -28,4 +28,8 @@ class Knight < Piece
 	def movePath (from,to)
 		# doesn't need path
 	end
+
+	def kingPath (pos)
+		knightPath(pos)
+	end
 end

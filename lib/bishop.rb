@@ -15,7 +15,7 @@ class Bishop < Piece
 		toX = to / 8
 		toY = to % 8
 
-		if (toX-fromX.abs == toY-fromY.abs)
+		if ((toX-fromX).abs == (toY-fromY).abs)
 			return true
 		else
 			return false
@@ -39,6 +39,16 @@ class Bishop < Piece
 		elsif (dirY > 0 && dirY > 0)
 			southEast(fromX,fromY,toX,toY)
 		end
+	end
+
+	def kingPath (pos)
+		posX = pos / 8
+		posY = pos % 8
+
+		northWest(posX,posY,0,0)
+		northEast(posX,posY,0,7)
+		southWest(posX,posY,7,0)
+		southEast(posX,posY,7,7)
 	end
 end
 

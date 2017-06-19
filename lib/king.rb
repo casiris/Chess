@@ -31,4 +31,8 @@ class King < Piece
 	def movePath (from,to)
 		# doesn't need a path, but still need a function to call
 	end
+
+	def kingPath (pos)
+		# king can't check other king, because it'd put itself in check too
+	end
 end

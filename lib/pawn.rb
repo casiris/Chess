@@ -78,4 +78,17 @@ class Pawn < Piece
 	def movePath (from,to)
 		# doesn't need a path, but still needs a function to call
 	end
+
+	def kingPath (pos)
+		posX = pos / 8
+		posY = pos % 8
+
+		if (self.color == "Black")
+			southEast(posX,posY,posX+1,posY+1)
+			southWest(posX,posY,posX+1,posY-1)
+		else
+			northEast(posX,posY,posX-1,posY+1)
+			northWest(posX,posY,posX-1,posY-1)
+		end
+	end
 end

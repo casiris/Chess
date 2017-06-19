@@ -60,6 +60,20 @@ class Queen < Piece
 			end
 		end
 	end
+
+	def kingPath (pos)
+		posX = pos / 8
+		posY = pos % 8
+
+		north(posX,posY,0)
+		south(posX,posY,7)
+		east(posX,posY,7)
+		west(posX,posY,0)
+		northWest(posX,posY,0,0)
+		northEast(posX,posY,0,7)
+		southWest(posX,posY,7,0)
+		southEast(posX,posY,7,7)
+	end
 end
 
 # this is just an amalgamation of rook and bishop

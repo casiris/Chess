@@ -43,6 +43,16 @@ class Rook < Piece
 			west(fromX,fromY,toY)
 		end
 	end
+
+	def kingPath (pos)
+		posX = pos / 8
+		posY = pos % 8
+
+		north(posX,posY,0)
+		south(posX,posY,7)
+		east(posX,posY,7)
+		west(posX,posY,0)
+	end
 end
 
 # rook can move anywhere, as long as the cardinal directions are clear
