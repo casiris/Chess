@@ -24,12 +24,12 @@ class Piece
 
 		# this will call each individual piece's movePath functions, even though it doesn't exist in Piece
 		movePath(from,to)
-		puts @path
 
 		# need to loop through path to find obsructions
 		# but only up to the last element, because it's treated differently
-		for i in 0..@path.length-2
-			if @path[i] != nil
+		# also, only need to check first array in path, because there's only one array when checking movement
+		for i in 0..@path[0].length-2
+			if (@path[0][i] != nil)
 				return false
 			end
 		end
@@ -37,9 +37,32 @@ class Piece
 		return checkLastTileInPath(@path)
 	end
 
+	# loop through each array in the outer array
+	# if there's an obstruction, move onto the next array
+	# if you run into the opposite king with no obstructions, it's check
+	# if you go through every array and don't find the king, no check
+	def isCheck (from)
+		checkKing(from)
+
+		# check path for opposite king
+		for i in 0..@path.length-1
+			for j in 0..@path[i].length-1
+				if (@path[i][j] != nil)
+					puts @path[i][j].toString
+					if (@path[i][j].color != self.color && @path[i][j].type == "King")
+						return true
+					else
+						break
+					end
+				end
+			end
+		end
+		return false
+	end
+
 	def checkLastTileInPath(path)
-		if (path[-1] != nil)
-			if (path[-1].color != self.color)
+		if (path[0][-1] != nil)
+			if (path[0][-1].color != self.color)
 				return true
 			else
 				return false
@@ -51,79 +74,107 @@ class Piece
 
 	# [-1,0]
 	def north (fromX,fromY,toX)
+		n = []
+
 		for i in toX..fromX-1
-			@path << @board[i][fromY]
+			n << @board[i][fromY]
 		end
-		@path.reverse!
+
+		n.reverse!
+		@path << n
 	end
 
 	# [1,0]
 	def south (fromX,fromY,toX)
+		s = []
+
 		for i in fromX+1..toX
-			@path << @board[i][fromY]
+			s << @board[i][fromY]
 		end
+
+		@path << s
 	end
 
 	# [0,1]
 	def east (fromX,fromY,toY)
+		e = []
+
 		for i in fromY+1..toY
-			@path << @board[fromX][i]
+			e << @board[fromX][i]
 		end
+
+		@path << e
 	end
 
 	# [0,-1]
 	def west (fromX,fromY,toY)
+		w = []
+
 		for i in toY..fromY-1
-			@path << @board[fromX][i]
+			w << @board[fromX][i]
 		end
-		@path.reverse!
+
+		w.reverse!
+		@path << w
 	end
 
 	# [-1,1]
 	def northEast (fromX,fromY,toX,toY)
+		ne = []
 		x = fromX-1
 		y = fromY+1
 
 		while (x >= toX && y <= toY)
-			@path << @board[x][y]
+			ne << @board[x][y]
 			x -= 1
 			y += 1
 		end
+
+		@path << ne
 	end
 
 	# [-1,-1]
 	def northWest (fromX,fromY,toX,toY)
+		nw = []
 		x = fromX-1
 		y = fromY-1
 
 		while (x >= toX && y >= toY)
-			@path << @board[x][y]
+			nw << @board[x][y]
 			x -= 1
 			y -= 1
 		end
+
+		@path << nw
 	end
 
 	# [1,1]
 	def southEast (fromX,fromY,toX,toY)
+		se = []
 		x = fromX+1
 		y = fromY+1
 
 		while (x <= toX && y <= toY)
-			@path << @board[x][y]
+			se << @board[x][y]
 			x += 1
 			y += 1
 		end
+
+		@path << se
 	end
 
 	# [1,-1]
 	def southWest (fromX,fromY,toX,toY)
+		sw = []
 		x = fromX+1
 		y = fromY-1
 
 		while (x <= toX && y >= toY)
-			@path << @board[x][y]
+			sw << @board[x][y]
 			x += 1
 			y -= 1
 		end
+
+		@path << sw
 	end
 end
