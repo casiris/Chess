@@ -23,9 +23,7 @@ class Piece
 		@path = [[]]
 
 		# this will call each individual piece's movePath functions, even though it doesn't exist in Piece
-		# if (self.type != "Pawn" || self.type != "Knight" || self.type != "King")
-		 	movePath(from,to)
-		# end
+		 movePath(from,to)
 
 		# need to loop through path to find obsructions
 		# but only up to the last element, because it's treated differently
@@ -51,7 +49,6 @@ class Piece
 		for i in 0..@path.length-1
 			for j in 0..@path[i].length-1
 				if (@path[i][j] != nil)
-					puts @path[i][j].toString
 					if (@path[i][j].color != self.color && @path[i][j].type == "King")
 						return true
 					end
@@ -185,7 +182,7 @@ class Piece
 		posY = pos % 8
 
 		# need to make sure we don't go out of bounds
-		if (posX+1 <= 7 && posX+2 <= 7)
+		if (posX+1 <= 7 && posY+2 <= 7)
 			kp << @board[posX+1][posY+2]
 		end
 		if (posX+1 <= 7 && posY-2 >= 0)
