@@ -1,9 +1,9 @@
-require_relative "pawn"
-require_relative "rook"
-require_relative "knight"
-require_relative "bishop"
-require_relative "queen"
-require_relative "king"
+require_relative "pieces/pawn"
+require_relative "pieces/rook"
+require_relative "pieces/knight"
+require_relative "pieces/bishop"
+require_relative "pieces/queen"
+require_relative "pieces/king"
 
 class Board
     attr_accessor :board
@@ -27,7 +27,7 @@ class Board
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
-        		  [nil,nil,wPawn,nil,nil,nil,nil,wPawn],
+        		  [nil,wPawn,nil,nil,nil,nil,wPawn,wPawn],
         		  [wRook,wKnight,wBishop,wQueen,wKing,wBishop,wKnight,wRook]]
         @file = ["a","b","c","d","e","f","g","h"]
     end
