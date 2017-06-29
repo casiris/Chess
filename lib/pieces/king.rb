@@ -13,13 +13,13 @@ class King < Piece
 		toX = to / 8
 		toY = to % 8
 
-		# prevent the king from moving if it would put itself in check
-		if (notInCheck(toX,toY) == false)
-			return false
-		end
-		if (knightCheck(to) == false)
-			return false
-		end
+		#prevent the king from moving if it would put itself in check
+		# if (notInCheck(toX,toY) == false)
+		# 	return false
+		# end
+		# if (knightCheck(to) == false)
+		# 	return false
+		# end
 
 		if (@board[toX][toY] == nil || @board[toX][toY].color != self.color)
 			if ((fromX-toX).abs == 1 && fromY-toY == 0)
@@ -38,6 +38,7 @@ class King < Piece
 
 	def movePath (from,to)
 		# doesn't need a path, but still need a function to call
+		@path = [[]]
 	end
 
 	def kingPath (pos)

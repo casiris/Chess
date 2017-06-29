@@ -77,6 +77,7 @@ class Pawn < Piece
 
 	def movePath (from,to)
 		# doesn't need a path, but still needs a function to call
+		@path = [[]]
 	end
 
 	def kingPath (pos)
