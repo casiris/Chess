@@ -14,16 +14,16 @@ class Piece
 	def isLegal (from,to,board)
 		@board = board
 
-		# check to make sure moved piece can move to "to"
+		# check to make sure moved piece can even move in the given direction
 		if (validateMove(from,to) == false)
 			return false
 		end
 
 		# need to clear the path before we use it to make sure there aren't leftover things from when that piece last moved
-		@path = [[]]
+		@path = []
 
 		# this will call each individual piece's movePath functions, even though it doesn't exist in Piece
-		 movePath(from,to)
+		movePath(from,to)
 
 		# need to loop through path to find obsructions
 		# but only up to the last element, because it's treated differently
@@ -52,6 +52,10 @@ class Piece
 					if (@path[i][j].color != self.color && @path[i][j].type == "King")
 						return true
 					end
+					# if (self.type != "Knight")
+					# 	# if any piece besides knight runs into a non-king piece, it's not check
+					# 	return false
+					# end
 				end
 			end
 		end
