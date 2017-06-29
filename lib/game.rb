@@ -84,7 +84,10 @@ class Game
 
 	def gameLoop
 		activePlayer = @playerWhite
+		check = false
 		checkmate = false
+		lastMove = @board.pieceAtIndex(59)
+		prevTo = 0
 
 		@board.display
 
@@ -92,15 +95,34 @@ class Game
 			@from = getFrom(activePlayer)
 			to = getTo(activePlayer)
 
-			# the last piece to move. after it's made a legal move, check if it has put the opposite king in check
+			if (check == true)
+				@board.update(@from,to)
+				if (lastMove.isCheck(prevTo) == true)
+					puts "That move leaves you in check. Try a different move"
+					# undo the last update if the tentative move didn't get player out of check
+					@board.update(to,@from)
+					redo
+				else
+					check = false
+				end
+				# undo the update until we update for real at the end of gameLoop
+				# otherwise it messes with getting lastMove
+				@board.update(to,@from)
+			end
+
 			lastMove = @board.pieceAtIndex(@from)
+			# the last piece to move. after making a legal move, check if it has put the opposite king in check
 			if (lastMove.isCheck(to) == true)
+				check = true
 				puts "king in check"
 			else
+				check = false
 				puts "no check"
 			end
 
-			#activePlayer = switchPlayer(activePlayer)
+			activePlayer = switchPlayer(activePlayer)
+
+			prevTo = to
 
 			@board.update(@from,to)
 			@board.display
@@ -109,9 +131,29 @@ class Game
 end
 
 
-# probably want to move the rank/file conversion and some other things to their own functions
-# so they can be reused in getTo, so i don't have to rewrite the same logic twice
-# so, validate input incrementally like i did in the first place
+# check
+# if in check, have the player choose a tenative move
+	# tenative move
+	# get from and to
+	# update the board, but don't display it
+	# check for check again
+	# if it doesn't get player out of check, reset the board to the state it was in before
+		# could either store board in a temp variable
+		# or store from/to in temp variables
+
+# i need to check if any move would put yourself in check. ie, moving a piece that was otherwise blocking a check
+# in order to do that, i should check if the king is in check after every move
+# and i should do that in its own class like i was doing, but right now it doesn't work
+# it does prevent the king from moving in check, but if it's in check, it prevents it from moving at all
+# fix that and we should be good
+
+# for checkmate, exapmle: black king can't make a move, check every black piece to see where they can move
+# then check the threatening piece (or pieces) and see if anywhere it can move is intersected by the black pieces
+# if there is an intersection, we know there's a move that can be made to get black out of check
+# if thare are no intersections, that's checkmate
+# the only problem i can see is a black piece intersecting the threatening piece in the wrong direction
+# for instance, white rook checking black king on the north, but a black rook beside the king could intersect
+# the white rook's east path, which would give a false positive
 
 g = Game.new
 g.gameLoop
