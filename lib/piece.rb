@@ -52,10 +52,10 @@ class Piece
 					if (@path[i][j].color != self.color && @path[i][j].type == "King")
 						return true
 					end
-					# if (self.type != "Knight")
-					# 	# if any piece besides knight runs into a non-king piece, it's not check
-					# 	return false
-					# end
+					if (self.type != "Knight")
+						# if any piece besides knight runs into a non-king piece, it's not check
+						return false
+					end
 				end
 			end
 		end
