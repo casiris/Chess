@@ -27,6 +27,7 @@ class Knight < Piece
 
 	def movePath (from,to)
 		# doesn't need path
+		@path = [[]]
 	end
 
 	def kingPath (pos)
