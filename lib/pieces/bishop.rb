@@ -30,22 +30,13 @@ class Bishop < Piece
 		dirX = toX - fromX
 		dirY = toY - fromY
 
-		puts "from: #{fromX},#{fromY}"
-		puts "to: #{toX},#{toY}"
-		puts "dir: #{dirX},#{dirY}"
-
-
 		if (dirX < 0 && dirY < 0)
-			puts "nw"
 			northWest(fromX,fromY,toX,toY)
 		elsif (dirX < 0 && dirY > 0)
-			puts "ne"
 			northEast(fromX,fromY,toX,toY)
 		elsif (dirX > 0 && dirY < 0)
-			puts "sw"
 			southWest(fromX,fromY,toX,toY)
 		elsif (dirX > 0 && dirY > 0)
-			puts "se"
 			southEast(fromX,fromY,toX,toY)
 		end
 	end
