@@ -97,6 +97,16 @@ class Game
 
 			if (check == true)
 				@board.update(@from,to)
+				# if lastMove was captured, then lastMove would now equal the piece that just moved to capture the previous lastMove
+				if (activePlayer == @playerWhite)
+					if (!@board.blackPieces.include?(lastMove))
+						lastMove = @board.pieceAtIndex(to)
+					end
+				else
+					if (!@board.whitePieces.include?(lastMove))
+						lastMove = @board.pieceAtIndex(to)
+					end
+				end
 				if (lastMove.isCheck(prevTo) == true)
 					puts "That move leaves you in check. Try a different move"
 					# undo the last update if the tentative move didn't get player out of check
@@ -130,23 +140,6 @@ class Game
 	end
 end
 
-
-# check
-# if in check, have the player choose a tenative move
-	# tenative move
-	# get from and to
-	# update the board, but don't display it
-	# check for check again
-	# if it doesn't get player out of check, reset the board to the state it was in before
-		# could either store board in a temp variable
-		# or store from/to in temp variables
-
-# i need to check if any move would put yourself in check. ie, moving a piece that was otherwise blocking a check
-# in order to do that, i should check if the king is in check after every move
-# and i should do that in its own class like i was doing, but right now it doesn't work
-# it does prevent the king from moving in check, but if it's in check, it prevents it from moving at all
-# fix that and we should be good
-
 # for checkmate, exapmle: black king can't make a move, check every black piece to see where they can move
 # then check the threatening piece (or pieces) and see if anywhere it can move is intersected by the black pieces
 # if there is an intersection, we know there's a move that can be made to get black out of check
@@ -157,3 +150,9 @@ end
 
 g = Game.new
 g.gameLoop
+
+# i need to check if any move would put yourself in check. ie, moving a piece that was otherwise blocking a check
+# in order to do that, i should check if the king is in check after every move
+# and i should do that in its own class like i was doing, but right now it doesn't work
+# it does prevent the king from moving in check, but if it's in check, it prevents it from moving at all
+# fix that and we should be good
