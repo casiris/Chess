@@ -6,7 +6,7 @@ require_relative "pieces/queen"
 require_relative "pieces/king"
 
 class Board
-    attr_accessor :board
+    attr_accessor :board, :whitePieces, :blackPieces
 
     def initialize
     	bPawn = Pawn.new("Black","\u2659")
@@ -22,13 +22,15 @@ class Board
         wQueen = Queen.new("White","\u265B")
         wKing = King.new("White","\u265A")
         @board = [[bRook,bKnight,bBishop,bQueen,bKing,bBishop,bKnight,bRook],
-        		  [bPawn,bPawn,bPawn,bPawn,bPawn,bPawn,bPawn,bPawn],
+        		  [bPawn,bPawn,bPawn,bPawn,nil,bPawn,bPawn,bPawn],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,wPawn,nil,nil,nil,nil,wPawn,wPawn],
         		  [wRook,wKnight,wBishop,wQueen,wKing,wBishop,wKnight,wRook]]
+        @whitePieces = @board[6][0..7] + @board[7][0..7]
+        @blackPieces = @board[0][0..7] + @board[1][0..7]
         @file = ["a","b","c","d","e","f","g","h"]
     end
 
@@ -49,6 +51,15 @@ class Board
         fromY = from % 8
         toX = to / 8
         toY = to % 8
+
+        # if a piece is captured, remove it from the appropriate array
+        if (@board[toX][toY] != nil)
+            if (whitePieces.include?(@board[toX][toY]))
+                whitePieces.delete(@board[toX][toY])
+            elsif (blackPieces.include?(@board[toX][toY]))
+                blackPieces.delete(@board[toX][toY])
+            end
+        end
         
         temp = @board[fromX][fromY]
         @board[fromX][fromY] = nil
