@@ -1,7 +1,9 @@
 require_relative "../piece"
 
 class King < Piece
-	def initialize (color,unicode)
+	#attr_accessor :position
+
+	def initialize (color,unicode,pos)
 		super
 		@type = "King"
 		@unicode = unicode
@@ -13,7 +15,7 @@ class King < Piece
 		toX = to / 8
 		toY = to % 8
 
-		#prevent the king from moving if it would put itself in check
+		# prevent the king from moving if it would put itself in check
 		# if (notInCheck(toX,toY) == false)
 		# 	return false
 		# end
@@ -43,11 +45,14 @@ class King < Piece
 
 	def kingPath (pos)
 		# king can't check other king, because it'd put itself in check too
+		@path = [[]]
 	end
 
 
 	# returns false if king would be in check
-	def notInCheck (posX,posY)
+	def notInCheck (pos)
+		posX = pos / 8
+		posY = pos % 8
 
 		north(posX,posY,0)
 		if (orthogonalCheck == false)
@@ -88,6 +93,12 @@ class King < Piece
 		if (southDiagonalCheck == false)
 			return false
 		end
+
+		if (knightCheck(pos) == false)
+			return false
+		end
+
+		puts "UH-OH K ING IN CHECK"
 	end
 
 	# see if there's a rook or queen putting the king in check
@@ -161,10 +172,36 @@ class King < Piece
 		return true
 	end
 
-	def knightCheck (pos)
-		knightPath(pos)
-		#puts @path
-		@path[0].each do |i|
+	def knightCheck (posX,posY)
+		kp = []
+
+		# need to make sure we don't go out of bounds
+		if (posX+1 <= 7 && posY+2 <= 7)
+			kp << @board[posX+1][posY+2]
+		end
+		if (posX+1 <= 7 && posY-2 >= 0)
+			kp << @board[posX+1][posY-2]
+		end
+		if (posX-1 >= 0 && posY+2 <= 7)
+			kp << @board[posX-1][posY+2]
+		end
+		if (posX-1 >= 0 && posY-2 >= 0)
+			kp << @board[posX-1][posY-2]
+		end
+		if (posX+2 <= 7 && posY+1 <= 7)
+			kp << @board[posX+2][posY+1]
+		end
+		if (posX+2 <= 7 && posY-1 >= 0)
+			kp << @board[posX+2][posY-1]
+		end
+		if (posX-2 >= 0 && posY+1 <= 7)
+			kp << @board[posX-2][posY+1]
+		end
+		if (posX-2 >= 0 && posY-1 >= 0)
+			kp << @board[posX-2][posY-1]
+		end
+		
+		kp.each do |i|
 			if (i != nil)
 				if (i.color != self.color && i.type == "Knight")
 					@path = []
@@ -172,7 +209,6 @@ class King < Piece
 				end
 			end
 		end
-		@path = []
 		return true
 	end
 end

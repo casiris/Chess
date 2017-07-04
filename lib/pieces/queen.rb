@@ -1,7 +1,7 @@
 require_relative "../piece"
 
 class Queen < Piece
-	def initialize (color,unicode)
+	def initialize (color,unicode,pos)
 		super
 		@type = "Queen"
 		@unicode = unicode
