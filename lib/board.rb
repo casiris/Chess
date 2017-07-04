@@ -9,20 +9,20 @@ class Board
     attr_accessor :board, :whitePieces, :blackPieces
 
     def initialize
-    	bPawn = Pawn.new("Black","\u2659")
-        bRook = Rook.new("Black","\u2656")
-        bKnight = Knight.new("Black","\u2658")
-        bBishop = Bishop.new("Black","\u2657")
-        bQueen = Queen.new("Black","\u2655")
-        bKing = King.new("Black","\u2654")
-        wPawn = Pawn.new("White","\u265F")
-        wRook = Rook.new("White","\u265C")
-        wKnight = Knight.new("White","\u265E")
-        wBishop = Bishop.new("White","\u265D")
-        wQueen = Queen.new("White","\u265B")
-        wKing = King.new("White","\u265A")
+    	bPawn = Pawn.new("Black","\u2659",0)
+        bRook = Rook.new("Black","\u2656",0)
+        bKnight = Knight.new("Black","\u2658",0)
+        bBishop = Bishop.new("Black","\u2657",0)
+        bQueen = Queen.new("Black","\u2655",0)
+        bKing = King.new("Black","\u2654",4)
+        wPawn = Pawn.new("White","\u265F",0)
+        wRook = Rook.new("White","\u265C",0)
+        wKnight = Knight.new("White","\u265E",0)
+        wBishop = Bishop.new("White","\u265D",0)
+        wQueen = Queen.new("White","\u265B",0)
+        wKing = King.new("White","\u265A",60)
         @board = [[bRook,bKnight,bBishop,bQueen,bKing,bBishop,bKnight,bRook],
-        		  [bPawn,bPawn,bPawn,bPawn,nil,bPawn,bPawn,bPawn],
+        		  [bPawn,bPawn,bPawn,nil,nil,nil,bPawn,bPawn],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
@@ -52,6 +52,10 @@ class Board
         toX = to / 8
         toY = to % 8
 
+        # update pieces's position. really only needed for king
+        piece = pieceAtIndex(from)
+        piece.position = to
+
         # if a piece is captured, remove it from the appropriate array
         if (@board[toX][toY] != nil)
             if (whitePieces.include?(@board[toX][toY]))
@@ -60,6 +64,7 @@ class Board
                 blackPieces.delete(@board[toX][toY])
             end
         end
+        # will later need to re-add in the case of pawn promotion
         
         temp = @board[fromX][fromY]
         @board[fromX][fromY] = nil
