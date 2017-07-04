@@ -1,9 +1,11 @@
 class Piece
 	attr_reader :color, :type, :unicode, :path
+	attr_accessor :position
 
-	def initialize (color,unicode)
+	def initialize (color,unicode,pos)
 		@color = color
 		@path = []
+		@position = pos
 		@board
 	end
 
@@ -180,37 +182,37 @@ class Piece
 		@path << sw
 	end
 
-	def knightPath (pos)
-		kp = []
-		posX = pos / 8
-		posY = pos % 8
+	# def knightPath (pos)
+	# 	kp = []
+	# 	posX = pos / 8
+	# 	posY = pos % 8
 
-		# need to make sure we don't go out of bounds
-		if (posX+1 <= 7 && posY+2 <= 7)
-			kp << @board[posX+1][posY+2]
-		end
-		if (posX+1 <= 7 && posY-2 >= 0)
-			kp << @board[posX+1][posY-2]
-		end
-		if (posX-1 >= 0 && posY+2 <= 7)
-			kp << @board[posX-1][posY+2]
-		end
-		if (posX-1 >= 0 && posY-2 >= 0)
-			kp << @board[posX-1][posY-2]
-		end
-		if (posX+2 <= 7 && posY+1 <= 7)
-			kp << @board[posX+2][posY+1]
-		end
-		if (posX+2 <= 7 && posY-1 >= 0)
-			kp << @board[posX+2][posY-1]
-		end
-		if (posX-2 >= 0 && posY+1 <= 7)
-			kp << @board[posX-2][posY+1]
-		end
-		if (posX-2 >= 0 && posY-1 >= 0)
-			kp << @board[posX-2][posY-1]
-		end
+	# 	# need to make sure we don't go out of bounds
+	# 	if (posX+1 <= 7 && posY+2 <= 7)
+	# 		kp << @board[posX+1][posY+2]
+	# 	end
+	# 	if (posX+1 <= 7 && posY-2 >= 0)
+	# 		kp << @board[posX+1][posY-2]
+	# 	end
+	# 	if (posX-1 >= 0 && posY+2 <= 7)
+	# 		kp << @board[posX-1][posY+2]
+	# 	end
+	# 	if (posX-1 >= 0 && posY-2 >= 0)
+	# 		kp << @board[posX-1][posY-2]
+	# 	end
+	# 	if (posX+2 <= 7 && posY+1 <= 7)
+	# 		kp << @board[posX+2][posY+1]
+	# 	end
+	# 	if (posX+2 <= 7 && posY-1 >= 0)
+	# 		kp << @board[posX+2][posY-1]
+	# 	end
+	# 	if (posX-2 >= 0 && posY+1 <= 7)
+	# 		kp << @board[posX-2][posY+1]
+	# 	end
+	# 	if (posX-2 >= 0 && posY-1 >= 0)
+	# 		kp << @board[posX-2][posY-1]
+	# 	end
 
-		@path << kp
-	end
+	# 	@path << kp
+	# end
 end
