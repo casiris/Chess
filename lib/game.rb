@@ -6,6 +6,8 @@ class Game
 		@board = Board.new
 		@playerWhite = Player.new("White")
 		@playerBlack = Player.new("Black")
+		@kingWhite = @board.pieceAtIndex(60)
+		@kingBlack = @board.pieceAtIndex(4)
 		@coordinate = [ "a1","b1","c1","d1","e1","f1","g1","h1",
                         "a2","b2","c2","d2","e2","f2","g2","h2",
                         "a3","b3","c3","d3","e3","f3","g3","h3",
@@ -76,18 +78,19 @@ class Game
 
 	def switchPlayer (player)
 		if (player.color == "White")
-			return @playerBlack
+			return @playerBlack, @kingBlack
 		else
-			return @playerWhite
+			return @playerWhite, @kingWhite
 		end
 	end
 
 	def gameLoop
 		activePlayer = @playerWhite
-		check = false
+		activeKing = @kingWhite
+		# check = false
 		checkmate = false
-		lastMove = @board.pieceAtIndex(59)
-		prevTo = 0
+		# lastMove = @board.pieceAtIndex(59)
+		# prevTo = 0
 
 		@board.display
 
@@ -95,44 +98,51 @@ class Game
 			@from = getFrom(activePlayer)
 			to = getTo(activePlayer)
 
-			if (check == true)
-				@board.update(@from,to)
-				# if lastMove was captured, then lastMove would now equal the piece that just moved to capture the previous lastMove
-				if (activePlayer == @playerWhite)
-					if (!@board.blackPieces.include?(lastMove))
-						lastMove = @board.pieceAtIndex(to)
-					end
-				else
-					if (!@board.whitePieces.include?(lastMove))
-						lastMove = @board.pieceAtIndex(to)
-					end
-				end
-				if (lastMove.isCheck(prevTo) == true)
-					puts "That move leaves you in check. Try a different move"
-					# undo the last update if the tentative move didn't get player out of check
-					@board.update(to,@from)
-					redo
-				else
-					check = false
-				end
-				# undo the update until we update for real at the end of gameLoop
-				# otherwise it messes with getting lastMove
-				@board.update(to,@from)
-			end
+			# if (check == true)
+			# 	@board.update(@from,to)
+			# 	# if lastMove was captured, then lastMove would now equal the piece that just moved to capture the previous lastMove
+			# 	if (activePlayer == @playerWhite)
+			# 		if (!@board.blackPieces.include?(lastMove))
+			# 			lastMove = @board.pieceAtIndex(to)
+			# 		end
+			# 	else
+			# 		if (!@board.whitePieces.include?(lastMove))
+			# 			lastMove = @board.pieceAtIndex(to)
+			# 		end
+			# 	end
+			# 	if (lastMove.isCheck(prevTo) == true)
+			# 		puts "That move leaves you in check. Try a different move"
+			# 		# undo the last update if the tentative move didn't get player out of check
+			# 		@board.update(to,@from)
+			# 		redo
+			# 	else
+			# 		check = false
+			# 	end
+			# 	# undo the update until we update for real at the end of gameLoop
+			# 	# otherwise it messes with getting lastMove
+			# 	@board.update(to,@from)
+			# end
 
-			lastMove = @board.pieceAtIndex(@from)
-			# the last piece to move. after making a legal move, check if it has put the opposite king in check
-			if (lastMove.isCheck(to) == true)
-				check = true
-				puts "king in check"
+			# lastMove = @board.pieceAtIndex(@from)
+			# # the last piece to move. after making a legal move, check if it has put the opposite king in check
+			# if (lastMove.isCheck(to) == true)
+			# 	check = true
+			# 	puts "king in check"
+			# else
+			# 	check = false
+			# 	puts "no check"
+			# end
+
+			if (activeKing.notInCheck(activeKing.position) == false)
+				puts "not in check"
 			else
-				check = false
-				puts "no check"
+				puts "#{activeKing.color} King in check"
 			end
 
-			activePlayer = switchPlayer(activePlayer)
+			# switchPlayer returns two values
+			activePlayer, activeKing = switchPlayer(activePlayer)
 
-			prevTo = to
+			# prevTo = to
 
 			@board.update(@from,to)
 			@board.display
@@ -156,3 +166,12 @@ g.gameLoop
 # and i should do that in its own class like i was doing, but right now it doesn't work
 # it does prevent the king from moving in check, but if it's in check, it prevents it from moving at all
 # fix that and we should be good
+
+# i think i should redo the check function
+# rather, lastMove doesn't need to have a check function if i'm doing it with the king every turn
+# so, the king should check all 8 directions and the 8 knight squares, then check for obstacles of the opposite color
+# to call the correct king, i'll need to keep track of the black and white kings
+# maybe just whatever array index from the color arrays, then switch between the two when activePlayer switches
+
+# need pieces, or at least king, to keep track of its own position
+# and i guess it'd update in board's update function
