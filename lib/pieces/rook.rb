@@ -31,7 +31,6 @@ class Rook < Piece
 
 		# only want to call the direction "to" is in
 		# also want the loop bounds to only be from from-to, instead of the entire length of the board from the current position
-		# later, when checking for the king, i can go the entire distance in that direction
 		if (fromX > toX)
 			north(fromX,fromY,toX)
 		elsif (fromX < toX)
