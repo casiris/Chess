@@ -43,26 +43,27 @@ class Piece
 	# if there's an obstruction, move onto the next array
 	# if you run into the opposite king with no obstructions, it's check
 	# if you go through every array and don't find the king, no check
-	def isCheck (pos)
-		@path = []
-		kingPath(pos)
 
-		# check path for opposite king
-		for i in 0..@path.length-1
-			for j in 0..@path[i].length-1
-				if (@path[i][j] != nil)
-					if (@path[i][j].color != self.color && @path[i][j].type == "King")
-						return true
-					end
-					if (self.type != "Knight")
-						# if any piece besides knight runs into a non-king piece, it's not check
-						return false
-					end
-				end
-			end
-		end
-		return false
-	end
+	# def isCheck (pos)
+	# 	@path = []
+	# 	kingPath(pos)
+
+	# 	# check path for opposite king
+	# 	for i in 0..@path.length-1
+	# 		for j in 0..@path[i].length-1
+	# 			if (@path[i][j] != nil)
+	# 				if (@path[i][j].color != self.color && @path[i][j].type == "King")
+	# 					return true
+	# 				end
+	# 				if (self.type != "Knight")
+	# 					# if any piece besides knight runs into a non-king piece, it's not check
+	# 					return false
+	# 				end
+	# 			end
+	# 		end
+	# 	end
+	# 	return false
+	# end
 
 	def checkLastTileInPath(path)
 		if (path[0][-1] != nil)
@@ -74,6 +75,97 @@ class Piece
 		else
 			return true
 		end
+	end
+
+	# king will call this to check if it's in check
+	def check (from,board)
+		@board = board
+		fromX = from / 8
+		fromY = from % 8
+		@path = []
+
+		#puts self.toString		# prints correct piece, ie, differentiates between pieces
+
+		north(fromX,fromY,0)
+		south(fromX,fromY,7)
+		east(fromX,fromY,7)
+		west(fromX,fromY,0)
+		orthogonalCheck
+
+		# orthogonal only works when the king moves into check, not when a piece puts the king in check
+		# and that's because i'm calling it from the king in game
+		# i might need to call it from the last piece moved
+
+		northWest(fromX,fromY,0,0)
+		northEast(fromX,fromY,0,7)
+		northDiagonalCheck
+
+		southWest(fromX,fromY,7,0)
+		southEast(fromX,fromY,7,7)
+		puts @path
+		southDiagonalCheck
+
+		# if (knightCheck(fromX,fromY) == false)
+		# 	return false
+		# end
+	end
+
+	# check orthogonal directions for queen or rook
+	def orthogonalCheck
+		@path.each do |i|
+			i.each do |j|
+				if (j != nil)
+					if (j.color != self.color && (j.type == "Queen" || j.type == "Rook"))
+						puts "check by queen or rook"
+					else	# if we hit a non-queen or non-rook, don't check further in that direction
+						break
+					end
+				end
+			end
+		end
+		@path = []
+	end
+
+	# two different diagonal checks because black pawns can only threaten from the north, and white from the south
+	def northDiagonalCheck
+		@path.each do |i|
+			if (i[0] != nil)
+				# only check white king in north, because black king won't be checked by northern pawns (black pawns)
+				if ((i[0].type == "Pawn" && i[0].color == "Black") && self.color == "White")
+					puts "check by black pawn"
+				end
+			end
+			i.each do |j|
+				if (j != nil)
+					if (j.color != self.color && (j.type == "Queen" || j.type == "Bishop"))
+						puts "check by queen or bishop"
+					else
+						break
+					end
+				end
+			end
+		end
+		@path = []
+	end
+
+	def southDiagonalCheck
+		@path.each do |i|
+			if (i[0] != nil)
+				if ((i[0].type == "Pawn" && i[0].color == "White") && self.color == "Black")
+					puts "check by white pawn"
+				end
+			end
+			i.each do |j|
+				if (j != nil)
+					if (j.color != self.color && (j.type == "Queen" || j.type == "Bishop"))
+						puts "check by queen or bishop"
+					else
+						break
+					end
+				end
+			end
+		end
+		@path = []
 	end
 
 	# [-1,0]
@@ -216,3 +308,6 @@ class Piece
 	# 	@path << kp
 	# end
 end
+
+
+# next thing to do is knightCheck
