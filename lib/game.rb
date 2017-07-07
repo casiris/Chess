@@ -85,8 +85,8 @@ class Game
 	end
 
 	def gameLoop
-		activePlayer = @playerWhite
-		activeKing = @kingWhite
+		activePlayer = @playerBlack
+		activeKing = @kingBlack
 		# check = false
 		checkmate = false
 		# lastMove = @board.pieceAtIndex(59)
@@ -133,19 +133,19 @@ class Game
 			# 	puts "no check"
 			# end
 
-			if (activeKing.notInCheck(activeKing.position) == false)
-				puts "not in check"
-			else
-				puts "#{activeKing.color} King in check"
-			end
-
-			# switchPlayer returns two values
-			activePlayer, activeKing = switchPlayer(activePlayer)
-
 			# prevTo = to
 
 			@board.update(@from,to)
 			@board.display
+
+			if (activeKing.check(activeKing.position,@board.board) == false)
+				puts "king in check"
+			else
+				puts "king is fine"
+			end
+
+			# switchPlayer returns two values
+			#activePlayer, activeKing = switchPlayer(activePlayer)
 		end
 	end
 end
