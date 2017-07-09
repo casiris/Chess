@@ -90,7 +90,9 @@ class Piece
 		south(fromX,fromY,7)
 		east(fromX,fromY,7)
 		west(fromX,fromY,0)
-		orthogonalCheck
+		if (orthogonalCheck == true)
+			return true
+		end
 
 		# orthogonal only works when the king moves into check, not when a piece puts the king in check
 		# and that's because i'm calling it from the king in game
@@ -98,16 +100,19 @@ class Piece
 
 		northWest(fromX,fromY,0,0)
 		northEast(fromX,fromY,0,7)
-		northDiagonalCheck
+		if (northDiagonalCheck == true)
+			return true
+		end
 
 		southWest(fromX,fromY,7,0)
 		southEast(fromX,fromY,7,7)
-		puts @path
-		southDiagonalCheck
+		if (southDiagonalCheck == true)
+			return true
+		end
 
-		# if (knightCheck(fromX,fromY) == false)
-		# 	return false
-		# end
+		if (knightCheck(from) == true)
+			return true
+		end
 	end
 
 	# check orthogonal directions for queen or rook
@@ -116,7 +121,7 @@ class Piece
 			i.each do |j|
 				if (j != nil)
 					if (j.color != self.color && (j.type == "Queen" || j.type == "Rook"))
-						puts "check by queen or rook"
+						return true
 					else	# if we hit a non-queen or non-rook, don't check further in that direction
 						break
 					end
@@ -124,6 +129,7 @@ class Piece
 			end
 		end
 		@path = []
+		return false
 	end
 
 	# two different diagonal checks because black pawns can only threaten from the north, and white from the south
@@ -132,13 +138,13 @@ class Piece
 			if (i[0] != nil)
 				# only check white king in north, because black king won't be checked by northern pawns (black pawns)
 				if ((i[0].type == "Pawn" && i[0].color == "Black") && self.color == "White")
-					puts "check by black pawn"
+					return true
 				end
 			end
 			i.each do |j|
 				if (j != nil)
 					if (j.color != self.color && (j.type == "Queen" || j.type == "Bishop"))
-						puts "check by queen or bishop"
+						return true
 					else
 						break
 					end
@@ -146,19 +152,20 @@ class Piece
 			end
 		end
 		@path = []
+		return false
 	end
 
 	def southDiagonalCheck
 		@path.each do |i|
 			if (i[0] != nil)
 				if ((i[0].type == "Pawn" && i[0].color == "White") && self.color == "Black")
-					puts "check by white pawn"
+					return true
 				end
 			end
 			i.each do |j|
 				if (j != nil)
 					if (j.color != self.color && (j.type == "Queen" || j.type == "Bishop"))
-						puts "check by queen or bishop"
+						return true
 					else
 						break
 					end
@@ -166,6 +173,7 @@ class Piece
 			end
 		end
 		@path = []
+		return false
 	end
 
 	# [-1,0]
@@ -274,39 +282,47 @@ class Piece
 		@path << sw
 	end
 
-	# def knightPath (pos)
-	# 	kp = []
-	# 	posX = pos / 8
-	# 	posY = pos % 8
+	def knightCheck (pos)
+		kp = []
+		posX = pos / 8
+		posY = pos % 8
 
-	# 	# need to make sure we don't go out of bounds
-	# 	if (posX+1 <= 7 && posY+2 <= 7)
-	# 		kp << @board[posX+1][posY+2]
-	# 	end
-	# 	if (posX+1 <= 7 && posY-2 >= 0)
-	# 		kp << @board[posX+1][posY-2]
-	# 	end
-	# 	if (posX-1 >= 0 && posY+2 <= 7)
-	# 		kp << @board[posX-1][posY+2]
-	# 	end
-	# 	if (posX-1 >= 0 && posY-2 >= 0)
-	# 		kp << @board[posX-1][posY-2]
-	# 	end
-	# 	if (posX+2 <= 7 && posY+1 <= 7)
-	# 		kp << @board[posX+2][posY+1]
-	# 	end
-	# 	if (posX+2 <= 7 && posY-1 >= 0)
-	# 		kp << @board[posX+2][posY-1]
-	# 	end
-	# 	if (posX-2 >= 0 && posY+1 <= 7)
-	# 		kp << @board[posX-2][posY+1]
-	# 	end
-	# 	if (posX-2 >= 0 && posY-1 >= 0)
-	# 		kp << @board[posX-2][posY-1]
-	# 	end
+		# need to make sure we don't go out of bounds
+		if (posX+1 <= 7 && posY+2 <= 7)
+			kp << @board[posX+1][posY+2]
+		end
+		if (posX+1 <= 7 && posY-2 >= 0)
+			kp << @board[posX+1][posY-2]
+		end
+		if (posX-1 >= 0 && posY+2 <= 7)
+			kp << @board[posX-1][posY+2]
+		end
+		if (posX-1 >= 0 && posY-2 >= 0)
+			kp << @board[posX-1][posY-2]
+		end
+		if (posX+2 <= 7 && posY+1 <= 7)
+			kp << @board[posX+2][posY+1]
+		end
+		if (posX+2 <= 7 && posY-1 >= 0)
+			kp << @board[posX+2][posY-1]
+		end
+		if (posX-2 >= 0 && posY+1 <= 7)
+			kp << @board[posX-2][posY+1]
+		end
+		if (posX-2 >= 0 && posY-1 >= 0)
+			kp << @board[posX-2][posY-1]
+		end
 
-	# 	@path << kp
-	# end
+		kp.each do |i|
+			if (i != nil)
+				if (i.color != self.color && i.type == "Knight")
+					@path = []
+					return true
+				end
+			end
+		end
+		return false
+	end
 end
 
 
