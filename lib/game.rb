@@ -85,8 +85,8 @@ class Game
 	end
 
 	def gameLoop
-		activePlayer = @playerBlack
-		activeKing = @kingBlack
+		activePlayer = @playerWhite
+		activeKing = @kingWhite
 		# check = false
 		checkmate = false
 		# lastMove = @board.pieceAtIndex(59)
@@ -98,54 +98,24 @@ class Game
 			@from = getFrom(activePlayer)
 			to = getTo(activePlayer)
 
-			# if (check == true)
-			# 	@board.update(@from,to)
-			# 	# if lastMove was captured, then lastMove would now equal the piece that just moved to capture the previous lastMove
-			# 	if (activePlayer == @playerWhite)
-			# 		if (!@board.blackPieces.include?(lastMove))
-			# 			lastMove = @board.pieceAtIndex(to)
-			# 		end
-			# 	else
-			# 		if (!@board.whitePieces.include?(lastMove))
-			# 			lastMove = @board.pieceAtIndex(to)
-			# 		end
-			# 	end
-			# 	if (lastMove.isCheck(prevTo) == true)
-			# 		puts "That move leaves you in check. Try a different move"
-			# 		# undo the last update if the tentative move didn't get player out of check
-			# 		@board.update(to,@from)
-			# 		redo
-			# 	else
-			# 		check = false
-			# 	end
-			# 	# undo the update until we update for real at the end of gameLoop
-			# 	# otherwise it messes with getting lastMove
-			# 	@board.update(to,@from)
-			# end
+			@board.update(@from,to)
 
-			# lastMove = @board.pieceAtIndex(@from)
-			# # the last piece to move. after making a legal move, check if it has put the opposite king in check
-			# if (lastMove.isCheck(to) == true)
-			# 	check = true
-			# 	puts "king in check"
-			# else
-			# 	check = false
-			# 	puts "no check"
-			# end
+			# prevent move if king would put itself in check, or if moving a piece would put king in check (discovered check)
+			if (activeKing.check(activeKing.position,@board.board) == true)
+				puts "That move leaves you in check. Try a different move"
 
-			# prevTo = to
+				@board.update(to,@from)
+				@from = getFrom(activePlayer)
+				to = getTo(activePlayer)
+			else
+				@board.update(to,@from)
+			end
 
 			@board.update(@from,to)
 			@board.display
 
-			if (activeKing.check(activeKing.position,@board.board) == false)
-				puts "king in check"
-			else
-				puts "king is fine"
-			end
-
 			# switchPlayer returns two values
-			#activePlayer, activeKing = switchPlayer(activePlayer)
+			activePlayer, activeKing = switchPlayer(activePlayer)
 		end
 	end
 end
@@ -161,17 +131,7 @@ end
 g = Game.new
 g.gameLoop
 
-# i need to check if any move would put yourself in check. ie, moving a piece that was otherwise blocking a check
-# in order to do that, i should check if the king is in check after every move
-# and i should do that in its own class like i was doing, but right now it doesn't work
-# it does prevent the king from moving in check, but if it's in check, it prevents it from moving at all
-# fix that and we should be good
-
-# i think i should redo the check function
-# rather, lastMove doesn't need to have a check function if i'm doing it with the king every turn
-# so, the king should check all 8 directions and the 8 knight squares, then check for obstacles of the opposite color
-# to call the correct king, i'll need to keep track of the black and white kings
-# maybe just whatever array index from the color arrays, then switch between the two when activePlayer switches
-
-# need pieces, or at least king, to keep track of its own position
-# and i guess it'd update in board's update function
+# need to make sure any move made won't put the king in checkInput
+# so, make a tentative move, update, call check on the active king
+# if it's in check, make player choose another move
+# if not, it's fine. undo the update (call update(to,from)) then update for real at the end
