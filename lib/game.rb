@@ -78,16 +78,24 @@ class Game
 
 	def switchPlayer (player)
 		if (player.color == "White")
-			return @playerBlack, @kingBlack
+			return @playerBlack
 		else
-			return @playerWhite, @kingWhite
+			return @playerWhite
+		end
+	end
+
+	def switchKing (king)
+		if (king.color == "White")
+			return @kingBlack
+		else
+			return @kingWhite
 		end
 	end
 
 	def gameLoop
 		activePlayer = @playerWhite
 		activeKing = @kingWhite
-		# check = false
+		check = false
 		checkmate = false
 		# lastMove = @board.pieceAtIndex(59)
 		# prevTo = 0
@@ -109,13 +117,23 @@ class Game
 				to = getTo(activePlayer)
 			else
 				@board.update(to,@from)
+				check = false
 			end
 
+			# end of turn. update and display board
 			@board.update(@from,to)
 			@board.display
 
-			# switchPlayer returns two values
-			activePlayer, activeKing = switchPlayer(activePlayer)
+			# get last piece to move and see if it has put the king in check
+			lastMove = @board.pieceAtIndex(to)
+			activeKing = switchKing(activeKing)
+
+			if activeKing.check(activeKing.position,@board.board) == true
+				puts "#{activeKing.color} King in check"
+				check = true
+			end
+
+			activePlayer = switchPlayer(activePlayer)
 		end
 	end
 end
@@ -130,8 +148,3 @@ end
 
 g = Game.new
 g.gameLoop
-
-# need to make sure any move made won't put the king in checkInput
-# so, make a tentative move, update, call check on the active king
-# if it's in check, make player choose another move
-# if not, it's fine. undo the update (call update(to,from)) then update for real at the end
