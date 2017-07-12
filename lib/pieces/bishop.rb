@@ -41,7 +41,7 @@ class Bishop < Piece
 		end
 	end
 
-	def kingPath (pos)
+	def generateMoves (pos)
 		posX = pos / 8
 		posY = pos % 8
 
@@ -51,6 +51,3 @@ class Bishop < Piece
 		southEast(posX,posY,7,7)
 	end
 end
-
-# bishop can move [1,1], [1,-1], [-1, 1], or [-1,-1]
-# probably a good idea to eventually make use of an array with possible moves for every piece

@@ -61,7 +61,7 @@ class Queen < Piece
 		end
 	end
 
-	def kingPath (pos)
+	def generateMoves (pos)
 		posX = pos / 8
 		posY = pos % 8
 

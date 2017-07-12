@@ -30,7 +30,7 @@ class Knight < Piece
 		@path = [[]]
 	end
 
-	def kingPath (pos)
-		knightPath(pos)
+	def generateMoves (pos)
+		@path = [[]]
 	end
 end

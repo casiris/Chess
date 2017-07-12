@@ -97,8 +97,6 @@ class Game
 		activeKing = @kingWhite
 		check = false
 		checkmate = false
-		# lastMove = @board.pieceAtIndex(59)
-		# prevTo = 0
 
 		@board.display
 
@@ -138,13 +136,12 @@ class Game
 	end
 end
 
-# for checkmate, exapmle: black king can't make a move, check every black piece to see where they can move
-# then check the threatening piece (or pieces) and see if anywhere it can move is intersected by the black pieces
-# if there is an intersection, we know there's a move that can be made to get black out of check
-# if thare are no intersections, that's checkmate
-# the only problem i can see is a black piece intersecting the threatening piece in the wrong direction
-# for instance, white rook checking black king on the north, but a black rook beside the king could intersect
-# the white rook's east path, which would give a false positive
+# checkmate
+# apparently all i need to do is check every possible move for each piece
+# generateMoves will get a list of every possible move in the piece's relevant directions
+# loop through all of those, update, check for check, undo update
+
+# probably want to check the king first. if it can move, we can stop there
 
 g = Game.new
 g.gameLoop

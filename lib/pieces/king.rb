@@ -29,12 +29,11 @@ class King < Piece
 	end
 
 	def movePath (from,to)
-		# doesn't need a path, but still need a function to call
+		# doesn't need a path, but still needs a function to call
 		@path = [[]]
 	end
 
-	def kingPath (pos)
-		# king can't check other king, because it'd put itself in check too
+	def generateMoves (pos)
 		@path = [[]]
 	end
 end

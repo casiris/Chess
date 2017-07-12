@@ -22,7 +22,7 @@ class Board
         wQueen = Queen.new("White","\u265B",0)
         wKing = King.new("White","\u265A",60)
         @board = [[bRook,bKnight,bBishop,bQueen,bKing,bBishop,bKnight,bRook],
-        		  [bPawn,bPawn,bPawn,nil,nil,nil,bPawn,bPawn],
+        		  [bPawn,bPawn,bPawn,nil,nil,bPawn,bPawn,bPawn],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],

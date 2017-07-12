@@ -39,32 +39,6 @@ class Piece
 		return checkLastTileInPath(@path)
 	end
 
-	# loop through each array in the outer array
-	# if there's an obstruction, move onto the next array
-	# if you run into the opposite king with no obstructions, it's check
-	# if you go through every array and don't find the king, no check
-
-	# def isCheck (pos)
-	# 	@path = []
-	# 	kingPath(pos)
-
-	# 	# check path for opposite king
-	# 	for i in 0..@path.length-1
-	# 		for j in 0..@path[i].length-1
-	# 			if (@path[i][j] != nil)
-	# 				if (@path[i][j].color != self.color && @path[i][j].type == "King")
-	# 					return true
-	# 				end
-	# 				if (self.type != "Knight")
-	# 					# if any piece besides knight runs into a non-king piece, it's not check
-	# 					return false
-	# 				end
-	# 			end
-	# 		end
-	# 	end
-	# 	return false
-	# end
-
 	def checkLastTileInPath(path)
 		if (path[0][-1] != nil)
 			if (path[0][-1].color != self.color)
@@ -280,6 +254,20 @@ class Piece
 		end
 
 		@path << sw
+	end
+
+	# something like this. can even rework the original directionals to work like this
+	# then treat the resulting path differently depending on checking for moving vs move generation
+	def northMoves (fromX,fromY,toX)
+		n = []
+
+		for i in toX..fromX-1
+			# to get 0-63 index from x/y, we can just multiply x by 8 and then add y
+			n << i*8+fromY
+		end
+
+		n.reverse!
+		@path << n
 	end
 
 	def knightCheck (pos)

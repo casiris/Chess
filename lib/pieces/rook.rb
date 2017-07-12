@@ -43,18 +43,13 @@ class Rook < Piece
 		end
 	end
 
-	def kingPath (pos)
+	def generateMoves (pos)
 		posX = pos / 8
 		posY = pos % 8
 
-		north(posX,posY,0)
-		south(posX,posY,7)
-		east(posX,posY,7)
-		west(posX,posY,0)
+		northMoves(posX,posY,0)
+		# south(posX,posY,7)
+		# east(posX,posY,7)
+		# west(posX,posY,0)
 	end
 end
-
-# rook can move anywhere, as long as the cardinal directions are clear
-# for instance, if moved out into the open middle, it can then move diagonally because there's no obstructions in the immediate NSEW
-# and bishop has been able to move wherever as well
-# so, movement isn't properly restrained
