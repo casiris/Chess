@@ -27,12 +27,20 @@ class Piece
 		# this will call each individual piece's movePath functions, even though it doesn't exist in Piece
 		movePath(from,to)
 
+		puts @path
+
 		# need to loop through path to find obsructions
 		# but only up to the last element, because it's treated differently
 		# also, only need to check first array in path, because there's only one array when checking movement
 		for i in 0..@path[0].length-2
 			if (@path[0][i] != nil)
-				return false
+				xPos = @path[0][i] / 8
+				yPos = @path[0][i] % 8
+				piece = @board[xPos][yPos]
+
+				if (piece != nil)
+					return false
+				end
 			end
 		end
 
