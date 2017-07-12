@@ -104,20 +104,6 @@ class Game
 			@from = getFrom(activePlayer)
 			to = getTo(activePlayer)
 
-			@board.update(@from,to)
-
-			# prevent move if king would put itself in check, or if moving a piece would put king in check (discovered check)
-			if (activeKing.check(activeKing.position,@board.board) == true)
-				puts "That move leaves you in check. Try a different move"
-
-				@board.update(to,@from)
-				@from = getFrom(activePlayer)
-				to = getTo(activePlayer)
-			else
-				@board.update(to,@from)
-				check = false
-			end
-
 			# end of turn. update and display board
 			@board.update(@from,to)
 			@board.display
@@ -125,11 +111,6 @@ class Game
 			# get last piece to move and see if it has put the king in check
 			lastMove = @board.pieceAtIndex(to)
 			activeKing = switchKing(activeKing)
-
-			if activeKing.check(activeKing.position,@board.board) == true
-				puts "#{activeKing.color} King in check"
-				check = true
-			end
 
 			activePlayer = switchPlayer(activePlayer)
 		end
