@@ -32,14 +32,14 @@ class Rook < Piece
 		# only want to call the direction "to" is in
 		# also want the loop bounds to only be from from-to, instead of the entire length of the board from the current position
 		if (fromX > toX)
-			north(fromX,fromY,toX)
+			northMoves(fromX,fromY,toX)
 		elsif (fromX < toX)
-			south(fromX,fromY,toX)
+			southMoves(fromX,fromY,toX)
 		end
 		if (fromY < toY)
-			east(fromX,fromY,toY)
+			eastMoves(fromX,fromY,toY)
 		elsif (fromY > toY)
-			west(fromX,fromY,toY)
+			westMoves(fromX,fromY,toY)
 		end
 	end
 
@@ -48,8 +48,8 @@ class Rook < Piece
 		posY = pos % 8
 
 		northMoves(posX,posY,0)
-		# south(posX,posY,7)
-		# east(posX,posY,7)
-		# west(posX,posY,0)
+		southMoves(posX,posY,7)
+		eastMoves(posX,posY,7)
+		westMoves(posX,posY,0)
 	end
 end

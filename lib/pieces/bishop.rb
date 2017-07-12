@@ -31,13 +31,13 @@ class Bishop < Piece
 		dirY = toY - fromY
 
 		if (dirX < 0 && dirY < 0)
-			northWest(fromX,fromY,toX,toY)
+			northWestMoves(fromX,fromY,toX,toY)
 		elsif (dirX < 0 && dirY > 0)
-			northEast(fromX,fromY,toX,toY)
+			northEastMoves(fromX,fromY,toX,toY)
 		elsif (dirX > 0 && dirY < 0)
-			southWest(fromX,fromY,toX,toY)
+			southWestMoves(fromX,fromY,toX,toY)
 		elsif (dirX > 0 && dirY > 0)
-			southEast(fromX,fromY,toX,toY)
+			southEastMoves(fromX,fromY,toX,toY)
 		end
 	end
 
@@ -45,9 +45,9 @@ class Bishop < Piece
 		posX = pos / 8
 		posY = pos % 8
 
-		northWest(posX,posY,0,0)
-		northEast(posX,posY,0,7)
-		southWest(posX,posY,7,0)
-		southEast(posX,posY,7,7)
+		northWestMoves(posX,posY,0,0)
+		northEastMoves(posX,posY,0,7)
+		southWestMoves(posX,posY,7,0)
+		southEastMoves(posX,posY,7,7)
 	end
 end

@@ -39,24 +39,24 @@ class Queen < Piece
 
 		if (@diagonal == false)
 			if (fromX > toX)
-				north(fromX,fromY,toX)
+				northMoves(fromX,fromY,toX)
 			elsif (fromX < toX)
-				south(fromX,fromY,toX)
+				southMoves(fromX,fromY,toX)
 			end
 			if (fromY < toY)
-				east(fromX,fromY,toY)
+				eastMoves(fromX,fromY,toY)
 			elsif (fromY > toY)
-				west(fromX,fromY,toY)
+				westMoves(fromX,fromY,toY)
 			end
 		else
 			if (dirX < 0 && dirY < 0)
-				northWest(fromX,fromY,toX,toY)
+				northWestMoves(fromX,fromY,toX,toY)
 			elsif (dirX < 0 && dirY > 0)
-				northEast(fromX,fromY,toX,toY)
+				northEastMoves(fromX,fromY,toX,toY)
 			elsif (dirY > 0 && dirY < 0)
-				southWest(fromX,fromY,toX,toY)
+				southWestMoves(fromX,fromY,toX,toY)
 			elsif (dirY > 0 && dirY > 0)
-				southEast(fromX,fromY,toX,toY)
+				southEastMoves(fromX,fromY,toX,toY)
 			end
 		end
 	end
@@ -65,14 +65,14 @@ class Queen < Piece
 		posX = pos / 8
 		posY = pos % 8
 
-		north(posX,posY,0)
-		south(posX,posY,7)
-		east(posX,posY,7)
-		west(posX,posY,0)
-		northWest(posX,posY,0,0)
-		northEast(posX,posY,0,7)
-		southWest(posX,posY,7,0)
-		southEast(posX,posY,7,7)
+		northMoves(posX,posY,0)
+		southMoves(posX,posY,7)
+		eastMoves(posX,posY,7)
+		westMoves(posX,posY,0)
+		northWestMoves(posX,posY,0,0)
+		northEastMoves(posX,posY,0,7)
+		southWestMoves(posX,posY,7,0)
+		southEastMoves(posX,posY,7,7)
 	end
 end
 

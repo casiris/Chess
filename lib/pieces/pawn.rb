@@ -85,11 +85,11 @@ class Pawn < Piece
 		posY = pos % 8
 
 		if (self.color == "Black")
-			southEast(posX,posY,posX+1,posY+1)
-			southWest(posX,posY,posX+1,posY-1)
+			southEastMoves(posX,posY,posX+1,posY+1)
+			southWestMoves(posX,posY,posX+1,posY-1)
 		else
-			northEast(posX,posY,posX-1,posY+1)
-			northWest(posX,posY,posX-1,posY-1)
+			northEastMoves(posX,posY,posX-1,posY+1)
+			northWestMoves(posX,posY,posX-1,posY-1)
 		end
 	end
 end
