@@ -22,7 +22,7 @@ class Pawn < Piece
 		toX = to / 8
 		toY = to % 8
 
-		if (@board[toX][fromX] == nil)
+		if (@board[toX][toY] == nil)
 			if (fromX == 1 || fromX == 6) 		# if pawns are in respective home rows, ie, haven't yet moved
 				if (self.color == "Black" && (toX-fromX == 1 || toX-fromX == 2))
 					return true
