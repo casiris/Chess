@@ -64,7 +64,6 @@ class King < Piece
 				y = j % 8
 				if (board[x][y] != nil)
 					if (board[x][y].color != self.color && (board[x][y].type == "Queen" || board[x][y].type == "Rook"))
-						puts "king in check by queen or rook"
 						return true
 					else		# if we hit a non-queen or non-rook, don't check further in that direction
 						break
@@ -85,7 +84,6 @@ class King < Piece
 				# only check white king in north, because black king won't be checked by northern pawns (black pawns)
 				if (board[x][y] != nil)
 					if ((board[x][y].type == "Pawn" && board[x][y].color == "Black") && self.color == "White")
-						puts "check by black pawn"
 						return true
 					end
 				end
@@ -96,7 +94,6 @@ class King < Piece
 				y = j % 8
 				if (board[x][y] != nil)
 					if (board[x][y].color != self.color && (board[x][y].type == "Queen" || board[x][y].type == "Bishop"))
-						puts "king in check by queen or bishop"
 						return true
 					else
 						break
@@ -115,7 +112,6 @@ class King < Piece
 				y = i[0] % 8
 				if (board[x][y] != nil)
 					if ((board[x][y].type == "Pawn" && board[x][y].color == "White") && self.color == "Black")
-						puts "check by white pawn"
 						return true
 					end
 				end
@@ -126,7 +122,6 @@ class King < Piece
 				y = j % 8
 				if (board[x][y] != nil)
 					if (board[x][y].color != self.color && (board[x][y].type == "Queen" || board[x][y].type == "Bishop"))
-						puts "king in check by queen or bishop"
 						return true
 					else
 						break
