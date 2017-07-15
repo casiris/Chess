@@ -104,6 +104,19 @@ class Game
 			@from = getFrom(activePlayer)
 			to = getTo(activePlayer)
 
+			@board.update(@from,to)
+
+			if (activeKing.check(activeKing.position,@board.board) == true)
+				puts "That move leaves you in check. Try a different move"
+
+				@board.update(to,@from)
+				@from = getFrom(activePlayer)
+				to = getTo(activePlayer)
+			else
+				@board.update(to,@from)
+				check = false
+			end
+
 			# end of turn. update and display board
 			@board.update(@from,to)
 			@board.display
@@ -111,6 +124,10 @@ class Game
 			# get last piece to move and see if it has put the king in check
 			lastMove = @board.pieceAtIndex(to)
 			activeKing = switchKing(activeKing)
+			if (activeKing.check(activeKing.position,@board.board) == true)
+				puts "#{activeKing.color} King in check"
+				check = true
+			end
 
 			activePlayer = switchPlayer(activePlayer)
 		end
@@ -126,3 +143,8 @@ end
 
 g = Game.new
 g.gameLoop
+
+# check
+# need to prevent king from moving if it would put itself in check
+# and actually, need to prevent any move that would put self in check
+# then, at the end of the turn, check for check to start the checkmate process
