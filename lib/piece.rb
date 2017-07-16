@@ -171,6 +171,3 @@ class Piece
 		@path << sw
 	end
 end
-
-
-# next thing to do is knightCheck
