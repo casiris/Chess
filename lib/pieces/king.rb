@@ -46,15 +46,24 @@ class King < Piece
 		southMoves(xPos,yPos,7)
 		eastMoves(xPos,yPos,7)
 		westMoves(xPos,yPos,0)
-		orthogonalCheck(board)
+		if (orthogonalCheck(board) == true)
+			return true
+		end
 
 		northEastMoves(xPos,yPos,0,7)
 		northWestMoves(xPos,yPos,0,0)
-		northDiagonalCheck(board)
+		if (northDiagonalCheck(board) == true)
+			return true
+		end
 
 		southEastMoves(xPos,yPos,7,7)
 		southWestMoves(xPos,yPos,7,0)
 		southDiagonalCheck(board)
+
+		if (knightCheck(position,board) == true)
+			return true
+		end
+		return false
 	end
 
 	def orthogonalCheck (board)
@@ -132,4 +141,46 @@ class King < Piece
 		@path = []
 		return false
 	end
+
+	def knightCheck (position,board)
+		kp = []
+
+		# need to make sure we don't go out of bounds
+		if (position-10 >= 0)
+			kp << position-10
+		end
+		if (position-17 >= 0)
+			kp << position-17
+		end
+		if (position-15 >= 0)
+			kp << position-15
+		end
+		if (position-6 >= 0)
+			kp << position-6
+		end
+		if (position+10 <= 63)
+			kp << position+10
+		end
+		if (position+17 <= 63)
+			kp << position+17
+		end
+		if (position+15 <= 63)
+			kp << position+15
+		end
+		if (position+6 <= 63)
+			kp << position+6
+		end
+
+		kp.each do |i|
+			x = i / 8
+			y = i % 8
+			if (board[x][y] != nil)
+				if (board[x][y].color != self.color && board[x][y].type == "Knight")
+					return true
+				end
+			end
+		end
+		return false
+	end
 end
+
