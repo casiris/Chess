@@ -170,4 +170,26 @@ class Piece
 
 		@path << sw
 	end
+
+	def knightMoves (position)
+		kp = []
+
+		kp << position-10
+		kp << position+10
+		kp << position-17
+		kp << position+17
+		kp << position-15
+		kp << position+15
+		kp << position-6
+		kp << position+6
+
+		# remove any positions out of bounds
+		kp.each do |i|
+			if (i < 0 || i > 63)
+				kp.delete(i)
+			end
+		end
+
+		@path << kp
+	end
 end
