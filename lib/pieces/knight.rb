@@ -31,6 +31,6 @@ class Knight < Piece
 	end
 
 	def generateMoves (pos)
-		@path = [[]]
+		knightMoves(pos)
 	end
 end

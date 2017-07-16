@@ -33,8 +33,27 @@ class King < Piece
 		@path = [[]]
 	end
 
-	def generateMoves (pos)
-		@path = [[]]
+	def generateMoves (position)
+		xPos = position / 8
+		yPos = position % 8
+
+		northMoves(xPos,yPos,xPos-1)
+		southMoves(xPos,yPos,xPos+1)
+		eastMoves(xPos,yPos,yPos+1)
+		westMoves(xPos,yPos,yPos-1)
+		northEastMoves(xPos,yPos,xPos-1,yPos+1)
+		northWestMoves(xPos,yPos,xPos-1,yPos-1)
+		southEastMoves(xPos,yPos,xPos+1,yPos+1)
+		southWestMoves(xPos,yPos,xPos+1,yPos-1)
+
+		# remove any positions that are out of bounds of the board (< 0 || > 63)
+		@path.each do |i|
+			i.each do |j|
+				if (j < 0 || j > 63)
+					i.delete(j)
+				end
+			end
+		end
 	end
 
 	def check (position,board)
@@ -60,7 +79,8 @@ class King < Piece
 		southWestMoves(xPos,yPos,7,0)
 		southDiagonalCheck(board)
 
-		if (knightCheck(position,board) == true)
+		knightMoves(position)
+		if (knightCheck(board) == true)
 			return true
 		end
 		return false
@@ -142,44 +162,19 @@ class King < Piece
 		return false
 	end
 
-	def knightCheck (position,board)
-		kp = []
-
-		# need to make sure we don't go out of bounds
-		if (position-10 >= 0)
-			kp << position-10
-		end
-		if (position-17 >= 0)
-			kp << position-17
-		end
-		if (position-15 >= 0)
-			kp << position-15
-		end
-		if (position-6 >= 0)
-			kp << position-6
-		end
-		if (position+10 <= 63)
-			kp << position+10
-		end
-		if (position+17 <= 63)
-			kp << position+17
-		end
-		if (position+15 <= 63)
-			kp << position+15
-		end
-		if (position+6 <= 63)
-			kp << position+6
-		end
-
-		kp.each do |i|
-			x = i / 8
-			y = i % 8
-			if (board[x][y] != nil)
-				if (board[x][y].color != self.color && board[x][y].type == "Knight")
-					return true
+	def knightCheck (board)
+		@path.each do |i|
+			i.each do |j|
+				x = j / 8
+				y = j % 8
+				if (board[x][y] != nil)
+					if (board[x][y].color != self.color && board[x][y].type == "Knight")
+						return true
+					end
 				end
 			end
 		end
+		@path = []
 		return false
 	end
 end
