@@ -173,23 +173,53 @@ class Piece
 
 	def knightMoves (position)
 		kp = []
+		xPos = position / 8
+		yPos = position % 8
 
-		kp << position-10
-		kp << position+10
-		kp << position-17
-		kp << position+17
-		kp << position-15
-		kp << position+15
-		kp << position-6
-		kp << position+6
+		[+1,+2]
+		[-2,-1]
 
-		# remove any positions out of bounds
-		kp.each do |i|
-			if (i < 0 || i > 63)
-				kp.delete(i)
-			end
+		# need to make sure we don't get out of bounds
+		if (xPos+1 <= 7 && yPos+2 <= 7)
+			kp << (xPos+1)*8 + (yPos+2)
+		end
+		if (xPos+1 <= 7 && yPos-2 >= 0)
+			kp << (xPos+1)*8 + (yPos-2)
+		end
+		if (xPos+2 <= 7 && yPos+1 <= 7)
+			kp << (xPos+2)*8 + (yPos+1)
+		end
+		if (xPos+2 <= 7 && yPos-1 >= 0)
+			kp << (xPos+2)*8 + (yPos-1)
+		end
+		if (xPos-1 >= 0 && yPos+2 <= 7)
+			kp << (xPos-1)*8 + (yPos+2)
+		end
+		if (xPos-1 >= 0 && yPos-2 >= 0)
+			kp << (xPos-1)*8 + (yPos-2)
+		end
+		if (xPos-2 >= 0 && yPos+1 <= 7)
+			kp << (xPos-2)*8 + (yPos+1)
+		end
+		if (xPos-2 >= 0 && yPos-1 >= 0)
+			kp << (xPos-2)*8 + (yPos-1)
 		end
 
 		@path << kp
+	end
+
+	# filter out moves where your own pieces are occupying
+	def filterMoves (board)
+		@path.each do |i|
+			i.each do |j|
+				x = j / 8
+				y = j % 8
+				if (board[x][y] != nil)
+					if (board[x][y].color == self.color)
+						i.delete(j)
+					end
+				end
+			end
+		end
 	end
 end
