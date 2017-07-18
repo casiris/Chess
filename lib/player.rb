@@ -1,3 +1,5 @@
+require_relative "board"
+
 class Player
 	attr_reader :color
 
@@ -5,7 +7,11 @@ class Player
 		@color = color
 	end
 
-	def test
-		puts @color
+	def switchPlayer
+		if (@color == "White")
+			@color = "Black"
+		else
+			@color = "White"
+		end
 	end
 end
