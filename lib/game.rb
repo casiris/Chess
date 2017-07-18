@@ -4,8 +4,7 @@ require_relative "player"
 class Game
 	def initialize
 		@board = Board.new
-		@playerWhite = Player.new("White")
-		@playerBlack = Player.new("Black")
+		@player = Player.new("White")
 		@kingWhite = @board.pieceAtIndex(60)
 		@kingBlack = @board.pieceAtIndex(4)
 		@coordinate = [ "a1","b1","c1","d1","e1","f1","g1","h1",
@@ -61,7 +60,6 @@ class Game
 				redo
 			end
 
-
 			# then call the piece's isLegal function, give it the from/to, and determine whether the player can make that move
 			piece = @board.pieceAtIndex(@from)
 			# if they can, return coord (as to)
@@ -76,14 +74,6 @@ class Game
 		end
 	end
 
-	def switchPlayer (player)
-		if (player.color == "White")
-			return @playerBlack
-		else
-			return @playerWhite
-		end
-	end
-
 	def switchKing (king)
 		if (king.color == "White")
 			return @kingBlack
@@ -93,7 +83,6 @@ class Game
 	end
 
 	def gameLoop
-		activePlayer = @playerWhite
 		activeKing = @kingWhite
 		check = false
 		checkmate = false
@@ -101,8 +90,22 @@ class Game
 		@board.display
 
 		while (!checkmate)
-			@from = getFrom(activePlayer)
-			to = getTo(activePlayer)
+			@from = getFrom(@player)
+			to = getTo(@player)
+
+			# just testing if we can switch between piece arrays
+			# we won't be trying it here, probably at the end, or in its own function if check is true
+			if (@player.color == "White")
+				for i in 0..@board.whitePieces.length-1
+					@board.whitePieces[i].generateMoves(@board.board)
+					puts "#{@board.whitePieces[i].toString}:#{@board.whitePieces[i].path.length}"
+				end
+			else
+				puts "black"
+			end
+			# so, seeing this output, rooks have 4 path lengths for instance
+			# they shouldn't have any, since they're blocked in and can't move
+			# so i still need to work on filtering out invalid moves
 
 			@board.update(@from,to)
 
@@ -110,8 +113,8 @@ class Game
 				puts "That move leaves you in check. Try a different move"
 
 				@board.update(to,@from)
-				@from = getFrom(activePlayer)
-				to = getTo(activePlayer)
+				@from = getFrom(@player)
+				to = getTo(@player)
 			else
 				@board.update(to,@from)
 				check = false
@@ -124,22 +127,26 @@ class Game
 			# get last piece to move and see if it has put the king in check
 			lastMove = @board.pieceAtIndex(to)
 			activeKing = switchKing(activeKing)
+
 			if (activeKing.check(activeKing.position,@board.board) == true)
 				puts "#{activeKing.color} King in check"
 				check = true
 			end
 
-			activePlayer = switchPlayer(activePlayer)
+			@player.switchPlayer
 		end
 	end
 end
 
 # checkmate
-# apparently all i need to do is check every possible move for each piece
-# generateMoves will get a list of every possible move in the piece's relevant directions
-# loop through all of those, update, check for check, undo update
+# apparently all i need to do is check every possible move for each piece (the current player's array of pieces)
+	# might want to update player class to include that, to make it easier
+# generateMoves will get a list of every possible move in the piece's relevant directions (as an index on the board)
+	# currently gets every square in applicable directions. need to filter out squares that are occpuied by your own pieces
+# then loop through path, update, check for check, then undo update
 
 # probably want to check the king first. if it can move, we can stop there
+# actually it doesn't matter. if any piece can move, we can stop
 
 g = Game.new
 g.gameLoop
