@@ -9,26 +9,47 @@ class Board
     attr_accessor :board, :whitePieces, :blackPieces
 
     def initialize
-    	bPawn = Pawn.new("Black","\u2659",0)
-        bRook = Rook.new("Black","\u2656",0)
-        bKnight = Knight.new("Black","\u2658",0)
-        bBishop = Bishop.new("Black","\u2657",0)
-        bQueen = Queen.new("Black","\u2655",0)
+        # there's gotta be a better way to set unique positions
+    	bPawn1 = Pawn.new("Black","\u2659",8)
+        bPawn2 = Pawn.new("Black","\u2659",9)
+        bPawn3 = Pawn.new("Black","\u2659",10)
+        bPawn4 = Pawn.new("Black","\u2659",11)
+        bPawn5 = Pawn.new("Black","\u2659",12)
+        bPawn6 = Pawn.new("Black","\u2659",13)
+        bPawn7 = Pawn.new("Black","\u2659",14)
+        bPawn8 = Pawn.new("Black","\u2659",15)
+        bRook1 = Rook.new("Black","\u2656",0)
+        bRook2 = Rook.new("Black","\u2656",7)
+        bKnight1 = Knight.new("Black","\u2658",1)
+        bKnight2 = Knight.new("Black","\u2658",6)
+        bBishop1 = Bishop.new("Black","\u2657",2)
+        bBishop2 = Bishop.new("Black","\u2657",5)
+        bQueen = Queen.new("Black","\u2655",3)
         bKing = King.new("Black","\u2654",4)
-        wPawn = Pawn.new("White","\u265F",0)
-        wRook = Rook.new("White","\u265C",0)
-        wKnight = Knight.new("White","\u265E",0)
-        wBishop = Bishop.new("White","\u265D",0)
-        wQueen = Queen.new("White","\u265B",0)
+        wPawn1 = Pawn.new("White","\u265F",48)
+        wPawn2 = Pawn.new("White","\u265F",49)
+        wPawn3 = Pawn.new("White","\u265F",50)
+        wPawn4 = Pawn.new("White","\u265F",51)
+        wPawn5 = Pawn.new("White","\u265F",52)
+        wPawn6 = Pawn.new("White","\u265F",53)
+        wPawn7 = Pawn.new("White","\u265F",54)
+        wPawn8 = Pawn.new("White","\u265F",55)
+        wRook1 = Rook.new("White","\u265C",56)
+        wRook2 = Rook.new("White","\u265C",63)
+        wKnight1 = Knight.new("White","\u265E",57)
+        wKnight2 = Knight.new("White","\u265E",62)
+        wBishop1 = Bishop.new("White","\u265D",58)
+        wBishop2 = Bishop.new("White","\u265D",61)
+        wQueen = Queen.new("White","\u265B",59)
         wKing = King.new("White","\u265A",60)
-        @board = [[bRook,bKnight,bBishop,bQueen,bKing,bBishop,bKnight,bRook],
-        		  [bPawn,bPawn,bPawn,nil,nil,bPawn,bPawn,bPawn],
+        @board = [[bRook1,bKnight1,bBishop1,bQueen,bKing,bBishop2,bKnight2,bRook2],
+        		  [bPawn1,bPawn2,bPawn3,bPawn4,bPawn5,bPawn6,bPawn7,bPawn8],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
-        		  [nil,wPawn,nil,nil,nil,nil,wPawn,wPawn],
-        		  [wRook,wKnight,wBishop,wQueen,wKing,wBishop,wKnight,wRook]]
+        		  [wPawn1,wPawn2,wPawn3,wPawn4,wPawn5,wPawn6,wPawn7,wPawn8],
+        		  [wRook1,wKnight1,wBishop1,wQueen,wKing,wBishop2,wKnight2,wRook2]]
         @whitePieces = @board[6][0..7] + @board[7][0..7]
         @blackPieces = @board[0][0..7] + @board[1][0..7]
         @file = ["a","b","c","d","e","f","g","h"]
