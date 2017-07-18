@@ -43,13 +43,15 @@ class Rook < Piece
 		end
 	end
 
-	def generateMoves (pos)
-		posX = pos / 8
-		posY = pos % 8
+	def generateMoves (board)
+		posX = @position / 8
+		posY = @position % 8
 
 		northMoves(posX,posY,0)
 		southMoves(posX,posY,7)
 		eastMoves(posX,posY,7)
 		westMoves(posX,posY,0)
+
+		filterMoves(board)
 	end
 end

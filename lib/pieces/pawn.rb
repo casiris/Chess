@@ -80,16 +80,46 @@ class Pawn < Piece
 		@path = [[]]
 	end
 
-	def generateMoves (pos)
-		posX = pos / 8
-		posY = pos % 8
+	def generateMoves (board)
+		posX = @position / 8
+		posY = @position % 8
 
 		if (self.color == "Black")
-			southEastMoves(posX,posY,posX+1,posY+1)
-			southWestMoves(posX,posY,posX+1,posY-1)
+			if (posX+1 <= 7)
+				southMoves(posX,posY,posX+1)
+			end
+			if (posX+1 <= 7 && posY+1 <= 7)
+				southEastMoves(posX,posY,posX+1,posY+1)
+			end
+			if (posX+1 <= 7 && posY >= 0)
+				southWestMoves(posX,posY,posX+1,posY-1)
+			end
 		else
-			northEastMoves(posX,posY,posX-1,posY+1)
-			northWestMoves(posX,posY,posX-1,posY-1)
+			if (posX-1 >= 0)
+				northMoves(posX,posY,posX-1)
+			end
+			if (posX-1 >= 0 && posY+1 <= 7)
+				northEastMoves(posX,posY,posX-1,posY+1)
+			end
+			if (posX-1 >= 0 && posY-1 >= 0)
+				northWestMoves(posX,posY,posX-1,posY-1)
+			end
+		end
+
+		# flatten array to less dimensions, which in this case seems to just remove any empty dimensions
+		@path.flatten!
+
+		# remove empty squares on diagonals and same color piece squares since pawns can't move there
+		# also, not calling filterMoves because pawn's path is a bunch of fixednums (instead of arrays) for some reason
+		# which messes up filterMoves
+		@path.each do |i|
+			x = i / 8
+			y = i % 8
+			if (board[x][y] == nil)
+				@path.delete(i)
+			elsif board[x][y].color == self.color
+				@path.delete(i)
+			end
 		end
 	end
 end

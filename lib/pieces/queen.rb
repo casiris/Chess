@@ -61,9 +61,9 @@ class Queen < Piece
 		end
 	end
 
-	def generateMoves (pos)
-		posX = pos / 8
-		posY = pos % 8
+	def generateMoves (board)
+		posX = @position / 8
+		posY = @position % 8
 
 		northMoves(posX,posY,0)
 		southMoves(posX,posY,7)
@@ -73,6 +73,8 @@ class Queen < Piece
 		northEastMoves(posX,posY,0,7)
 		southWestMoves(posX,posY,7,0)
 		southEastMoves(posX,posY,7,7)
+
+		filterMoves(board)
 	end
 end
 

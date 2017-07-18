@@ -33,27 +33,37 @@ class King < Piece
 		@path = [[]]
 	end
 
-	def generateMoves (position)
-		xPos = position / 8
-		yPos = position % 8
+	def generateMoves (board)
+		xPos = @position / 8
+		yPos = @position % 8
 
-		northMoves(xPos,yPos,xPos-1)
-		southMoves(xPos,yPos,xPos+1)
-		eastMoves(xPos,yPos,yPos+1)
-		westMoves(xPos,yPos,yPos-1)
-		northEastMoves(xPos,yPos,xPos-1,yPos+1)
-		northWestMoves(xPos,yPos,xPos-1,yPos-1)
-		southEastMoves(xPos,yPos,xPos+1,yPos+1)
-		southWestMoves(xPos,yPos,xPos+1,yPos-1)
-
-		# remove any positions that are out of bounds of the board (< 0 || > 63)
-		@path.each do |i|
-			i.each do |j|
-				if (j < 0 || j > 63)
-					i.delete(j)
-				end
-			end
+		# make sure to stay in board bounds
+		if (xPos-1 >= 0)
+			northMoves(xPos,yPos,xPos-1)
 		end
+		if (xPos+1 <= 7)
+			southMoves(xPos,yPos,xPos+1)
+		end
+		if (yPos+1 <= 7)
+			eastMoves(xPos,yPos,yPos+1)
+		end
+		if (yPos-1 >= 0)
+			westMoves(xPos,yPos,yPos-1)
+		end
+		if (xPos-1 >= 0 && yPos+1 <= 7)
+			northEastMoves(xPos,yPos,xPos-1,yPos+1)
+		end
+		if (xPos-1 >= 0 && yPos-1 >= 0)
+			northWestMoves(xPos,yPos,xPos-1,yPos-1)
+		end
+		if (xPos+1 <= 7 && yPos+1 <= 7)
+			southEastMoves(xPos,yPos,xPos+1,yPos+1)
+		end
+		if (xPos+1 <= 7 && yPos-1 >= 0)
+			southWestMoves(xPos,yPos,xPos+1,yPos-1)
+		end
+
+		filterMoves(board)
 	end
 
 	def check (position,board)
