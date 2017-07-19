@@ -106,20 +106,7 @@ class Pawn < Piece
 			end
 		end
 
-		# flatten array to less dimensions, which in this case seems to just remove any empty dimensions
-		@path.flatten!
-
-		# remove empty squares on diagonals and same color piece squares since pawns can't move there
-		# also, not calling filterMoves because pawn's path is a bunch of fixednums (instead of arrays) for some reason
-		# which messes up filterMoves
-		@path.each do |i|
-			x = i / 8
-			y = i % 8
-			if (board[x][y] == nil)
-				@path.delete(i)
-			elsif board[x][y].color == self.color
-				@path.delete(i)
-			end
-		end
+		# removes emtpy arrays that exist thanks to movePath
+		@path.delete([])
 	end
 end
