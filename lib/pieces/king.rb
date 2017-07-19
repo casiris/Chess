@@ -62,8 +62,6 @@ class King < Piece
 		if (xPos+1 <= 7 && yPos-1 >= 0)
 			southWestMoves(xPos,yPos,xPos+1,yPos-1)
 		end
-
-		filterMoves(board)
 	end
 
 	def check (position,board)

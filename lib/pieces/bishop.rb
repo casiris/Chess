@@ -50,6 +50,6 @@ class Bishop < Piece
 		southWestMoves(posX,posY,7,0)
 		southEastMoves(posX,posY,7,7)
 
-		filterMoves(board)
+		@path.delete([])
 	end
 end

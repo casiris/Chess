@@ -32,6 +32,6 @@ class Knight < Piece
 
 	def generateMoves (board)
 		knightMoves(@position)
-		filterMoves(board)
+		@path.delete([])
 	end
 end

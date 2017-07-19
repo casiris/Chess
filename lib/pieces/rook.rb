@@ -52,6 +52,6 @@ class Rook < Piece
 		eastMoves(posX,posY,7)
 		westMoves(posX,posY,0)
 
-		filterMoves(board)
+		@path.delete([])
 	end
 end

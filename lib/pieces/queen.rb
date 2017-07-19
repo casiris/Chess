@@ -74,7 +74,8 @@ class Queen < Piece
 		southWestMoves(posX,posY,7,0)
 		southEastMoves(posX,posY,7,7)
 
-		filterMoves(board)
+		# removes empty arrays, which occur when a piece can't move in that direction
+		@path.delete([])
 	end
 end
 
