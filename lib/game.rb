@@ -82,6 +82,22 @@ class Game
 		end
 	end
 
+	# instead of filtering out invalid moves, it'd be easier to just call each piece's isLegal function
+	# if the move isn't legal, we can't move there, so we can go to the next possible move
+	# also, for sliding pieces, if one move is invalid, then the rest of that direction is also invalid, so we can skip to the next direction
+	# for non-sliding pieces, it will work the same, except they only have 1 move in any direction array, so no need for a special case
+	# after all that, if isLegal is true, then we can update, check for check, and do all that
+	def isCheckmate
+		if (@player.color == "White")
+			for i in 0..@board.whitePieces.length-1
+				@board.whitePieces[i].generateMoves(@board.board)
+				puts "#{@board.whitePieces[i].toString}:#{@board.whitePieces[i].path}"
+			end
+		else
+			puts "black"
+		end
+	end
+
 	def gameLoop
 		activeKing = @kingWhite
 		check = false
@@ -92,20 +108,6 @@ class Game
 		while (!checkmate)
 			@from = getFrom(@player)
 			to = getTo(@player)
-
-			# just testing if we can switch between piece arrays
-			# we won't be trying it here, probably at the end, or in its own function if check is true
-			if (@player.color == "White")
-				for i in 0..@board.whitePieces.length-1
-					@board.whitePieces[i].generateMoves(@board.board)
-					puts "#{@board.whitePieces[i].toString}:#{@board.whitePieces[i].path.length}"
-				end
-			else
-				puts "black"
-			end
-			# so, seeing this output, rooks have 4 path lengths for instance
-			# they shouldn't have any, since they're blocked in and can't move
-			# so i still need to work on filtering out invalid moves
 
 			@board.update(@from,to)
 
@@ -132,6 +134,8 @@ class Game
 				puts "#{activeKing.color} King in check"
 				check = true
 			end
+
+			isCheckmate
 
 			@player.switchPlayer
 		end
