@@ -172,40 +172,46 @@ class Piece
 	end
 
 	def knightMoves (position)
-		kp = []
+		# it's hacky but i need each direction in knight's path to be in a separate array (within path), for parallelism later
+		# and this doesn't seem to mess up king's check function
+		kp1 = []
+		kp2 = []
+		kp3 = []
+		kp4 = []
+		kp5 = []
+		kp6 = []
+		kp7 = []
+		kp8 = []
 		xPos = position / 8
 		yPos = position % 8
 
-		[+1,+2]
-		[-2,-1]
-
 		# need to make sure we don't get out of bounds
 		if (xPos+1 <= 7 && yPos+2 <= 7)
-			kp << (xPos+1)*8 + (yPos+2)
+			kp1 << (xPos+1)*8 + (yPos+2)
 		end
 		if (xPos+1 <= 7 && yPos-2 >= 0)
-			kp << (xPos+1)*8 + (yPos-2)
+			kp2 << (xPos+1)*8 + (yPos-2)
 		end
 		if (xPos+2 <= 7 && yPos+1 <= 7)
-			kp << (xPos+2)*8 + (yPos+1)
+			kp3 << (xPos+2)*8 + (yPos+1)
 		end
 		if (xPos+2 <= 7 && yPos-1 >= 0)
-			kp << (xPos+2)*8 + (yPos-1)
+			kp4 << (xPos+2)*8 + (yPos-1)
 		end
 		if (xPos-1 >= 0 && yPos+2 <= 7)
-			kp << (xPos-1)*8 + (yPos+2)
+			kp5 << (xPos-1)*8 + (yPos+2)
 		end
 		if (xPos-1 >= 0 && yPos-2 >= 0)
-			kp << (xPos-1)*8 + (yPos-2)
+			kp6 << (xPos-1)*8 + (yPos-2)
 		end
 		if (xPos-2 >= 0 && yPos+1 <= 7)
-			kp << (xPos-2)*8 + (yPos+1)
+			kp7 << (xPos-2)*8 + (yPos+1)
 		end
 		if (xPos-2 >= 0 && yPos-1 >= 0)
-			kp << (xPos-2)*8 + (yPos-1)
+			kp8 << (xPos-2)*8 + (yPos-1)
 		end
 
-		@path << kp
+		@path << kp1 << kp2 << kp3 << kp4 << kp5 << kp6 << kp7 << kp8
 	end
 
 	# filter out moves where your own pieces are occupying
