@@ -82,53 +82,8 @@ class Game
 		end
 	end
 
-	# instead of filtering out invalid moves, it'd be easier to just call each piece's isLegal function
-	# if the move isn't legal, we can't move there, so we can go to the next possible move
-	# also, for sliding pieces, if one move is invalid, then the rest of that direction is also invalid, so we can skip to the next direction
-	# for non-sliding pieces, it will work the same, except they only have 1 move in any direction array, so no need for a special case
-	# after all that, if isLegal is true, then we can update, check for check, and do all that
-
-	# loop through appropriate piece array, generate what moves each piece can make, add legal moves to an array
-	def findLegalMoves (currentKing)
-		legalMoves = []
-		if (@player.color == "White")
-			for i in 0..@board.whitePieces.length-1
-				@board.whitePieces[i].generateMoves(@board.board)
-
-				@board.whitePieces[i].path.each do |j|
-					j.each do |k|
-						if (@board.whitePieces[i].isLegal(@board.whitePieces[i].position,k,@board.board))
-							legalMoves << k
-						else
-							# if a move isn't legal in a certain direction, we can break and go to the next direction
-							break							
-						end
-					end
-				end
-			end 
-		else
-			for i in 0..@board.blackPieces.length-1
-				@board.blackPieces[i].generateMoves(@board.board)
-
-				@board.blackPieces[i].path.each do |j|
-					j.each do |k|
-						if (@board.blackPieces[i].isLegal(@board.blackPieces[i].position,k,@board.board))
-							legalMoves << k
-						else
-							break							
-						end
-					end
-				end
-			end 
-		end
-	end
-
 	def isCheckmate(currentKing,legalMoves)
-		# the problem with separating findLegalMovees and isCheckmate is that the legalMoves array is just an array with no refernce point
-		# i don't know which pieces are able to move to whatever position in the array
-
-		# i guess i could have separate arrays within legalMoves for each piece, like i'm doing with generateMoves
-		# and then it would easily line up with the piece arrays
+		
 	end
 
 	def gameLoop
@@ -168,8 +123,10 @@ class Game
 				check = true
 			end
 
-			legalMoves = findLegalMoves
-			isCheckmate(activeKing,legalMoves)
+			@board.whitePieces[-2].findLegalMoves(@board.board)
+			puts @board.whitePieces[-2].legalMoves
+
+			#isCheckmate(activeKing,legalMoves)
 
 			@player.switchPlayer
 		end

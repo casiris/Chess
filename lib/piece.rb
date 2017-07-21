@@ -1,10 +1,11 @@
 class Piece
-	attr_reader :color, :type, :unicode, :path
+	attr_reader :color, :type, :unicode, :path, :legalMoves
 	attr_accessor :position
 
 	def initialize (color,unicode,pos)
 		@color = color
 		@path = []
+		@legalMoves = []
 		@position = pos
 		@board
 	end
@@ -61,6 +62,20 @@ class Piece
 			end
 		else
 			return true
+		end
+	end
+
+	def findLegalMoves (board)
+		generateMoves(board)
+
+		@path.each do |i|
+			i.each do |j|
+				if (isLegal(@position,j,board))
+					legalMoves << j
+				else
+					break
+				end
+			end
 		end
 	end
 
