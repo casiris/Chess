@@ -78,14 +78,9 @@ class Board
         piece.position = to
 
         # if a piece is captured, remove it from the appropriate array
-        if (@board[toX][toY] != nil)
-            if (whitePieces.include?(@board[toX][toY]))
-                whitePieces.delete(@board[toX][toY])
-            elsif (blackPieces.include?(@board[toX][toY]))
-                blackPieces.delete(@board[toX][toY])
-            end
-        end
         # will later need to re-add in the case of pawn promotion
+        whitePieces.delete(nil)
+        blackPieces.delete(nil)
         
         temp = @board[fromX][fromY]
         @board[fromX][fromY] = nil
