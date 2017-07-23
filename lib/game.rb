@@ -82,8 +82,39 @@ class Game
 		end
 	end
 
-	def isCheckmate(currentKing,legalMoves)
-		
+	def isCheckmate(currentPlayer,currentKing)
+		if (currentPlayer.color == "White")
+			@board.whitePieces.each do |i|
+				piecePosition = i.position 		# need a variable for position, because the pieces update their position when the board updates
+				i.findLegalMoves(@board.board)
+
+				i.legalMoves.each do |j|
+					@board.update(piecePosition,j)
+					if (currentKing.check(currentKing.position,@board.board) == false)
+						@board.update(j,piecePosition)
+						return false
+					end
+					@board.update(j,piecePosition)
+				end
+			end
+			# if we get through the whole array and king was always in check, it's checkmate
+			return true
+		else
+			@board.blackPieces.each do |i|
+				piecePosition = i.position
+				i.findLegalMoves(@board.board)
+
+				i.legalMoves.each do |j|
+					@board.update(piecePosition,j)
+					if (currentKing.check(currentKing.position,@board.board) == false)
+						@board.update(j,piecePosition)
+						return false
+					end
+					@board.update(j,piecePosition)
+				end
+			end
+			return true
+		end
 	end
 
 	def gameLoop
@@ -123,13 +154,14 @@ class Game
 				check = true
 			end
 
-			@board.whitePieces[-2].findLegalMoves(@board.board)
-			puts @board.whitePieces[-2].legalMoves
-
-			#isCheckmate(activeKing,legalMoves)
-
 			@player.switchPlayer
+
+			checkmate = isCheckmate(@player,activeKing)
+			@board.display
 		end
+
+		@player.switchPlayer
+		puts "#{activeKing.color} King in checkmate. Player #{@player.color} wins"
 	end
 end
 
