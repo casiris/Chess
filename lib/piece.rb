@@ -1,12 +1,13 @@
 class Piece
 	attr_reader :color, :type, :unicode, :path, :legalMoves
-	attr_accessor :position
+	attr_accessor :position, :hasMoved
 
 	def initialize (color,unicode,pos)
 		@color = color
 		@path = []
 		@legalMoves = []
 		@position = pos
+		@hasMoved = false
 		@board
 	end
 
@@ -227,20 +228,5 @@ class Piece
 		end
 
 		@path << kp1 << kp2 << kp3 << kp4 << kp5 << kp6 << kp7 << kp8
-	end
-
-	# filter out moves where your own pieces are occupying
-	def filterMoves (board)
-		@path.each do |i|
-			i.each do |j|
-				x = j / 8
-				y = j % 8
-				if (board[x][y] != nil)
-					if (board[x][y].color == self.color)
-						i.delete(j)
-					end
-				end
-			end
-		end
 	end
 end
