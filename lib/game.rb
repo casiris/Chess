@@ -60,16 +60,44 @@ class Game
 				redo
 			end
 
-			# then call the piece's isLegal function, give it the from/to, and determine whether the player can make that move
 			piece = @board.pieceAtIndex(@from)
+			# if the king is trying to casle, call its castle function
+			if (piece.type == "King")
+				if ((@from-coord).abs == 2)
+					if (piece.castle(@from,coord,@board.board) == true)
+						checkInput = true
+						# need to move rook -1 and king +3 (return as coord)
+						@board.update(@from+3,@from+1)
+						return coord
+					else
+						puts "Can't castle"
+						@from = getFrom(player)
+					end
+				elsif ((@from-coord).abs == 3)
+					if (piece.castle(@from,coord,@board.board) == true)
+						checkInput = true
+						# need to move rook -1 and king +3
+						@board.update(@from-4,@from-2)
+						return coord
+					else
+						puts "Can't castle"
+						@from = getFrom(player)
+					end
+				else
+					if (piece.isLegal(@from,coord,@board.board) == true)
+						checkInput = true
+						return coord
+					end
+				end
+			# call the piece's isLegal function, give it the from/to, and determine whether the player can make that move
 			# if they can, return coord (as to)
 			# if they can't, ask them to move a different piece and call getFrom again
-			if (piece.isLegal(@from,coord,@board.board) == true)
+			elsif (piece.isLegal(@from,coord,@board.board) == true)
 				checkInput = true
 				return coord
 			else
 				puts "Can't move that piece there. Pick a different piece"
-				@from = getFrom (player)
+				@from = getFrom(player)
 			end
 		end
 	end
@@ -143,7 +171,7 @@ class Game
 
 			# end of turn. update and display board
 			@board.update(@from,to)
-			@board.display
+			#@board.display
 
 			# get last piece to move and see if it has put the king in check
 			lastMove = @board.pieceAtIndex(to)
