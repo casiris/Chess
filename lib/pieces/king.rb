@@ -185,5 +185,68 @@ class King < Piece
 		@path = []
 		return false
 	end
-end
 
+	def castle (from,to,board)
+		fromX = from / 8
+		fromY = from % 8
+		toX = to / 8
+		toY = to % 8
+		castlePath = []
+
+		# king side castle
+		if ((fromY-toY).abs == 2)
+			rook = board[fromX][fromY+3]
+			
+			if (self.hasMoved == false && rook.hasMoved == false)
+				# need to get every position in the move, starting at king and ending at its final position
+				for i in fromY..toY
+					castlePath << (fromX*8 + i)
+				end
+				# loop through the middle of the path and see if those squares are blank
+				for i in 1..castlePath.length-2
+					x = castlePath[i] / 8
+					y = castlePath[i] % 8
+
+					if (board[x][y] != nil)
+						return false
+					end
+				end
+				# call check for every position in path
+				castlePath.each do |i|
+					if (check(i,board) == false)
+						return true
+					else
+						return false
+					end
+				end
+			else
+				return false
+			end
+		else	# queen side castle
+			rook = board[fromX][fromY-4]
+			
+			if (self.hasMoved == false && rook.hasMoved == false)
+				for i in toY..fromY
+					castlePath << (fromX*8 + i)
+				end
+				for i in 1..castlePath.length-2
+					x = castlePath[i] / 8
+					y = castlePath[i] % 8
+
+					if (board[x][y] != nil)
+						return false
+					end
+				end
+				castlePath.each do |i|
+					if (check(i,board) == false)
+						return true
+					else
+						return false
+					end
+				end
+			else
+				return false
+			end
+		end
+	end
+end
