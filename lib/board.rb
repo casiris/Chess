@@ -73,9 +73,10 @@ class Board
         toX = to / 8
         toY = to % 8
 
-        # update pieces's position. really only needed for king
+        # update pieces's position and flag that they have moved
         piece = pieceAtIndex(from)
         piece.position = to
+        piece.hasMoved = true
 
         # if a piece is captured, remove it from the appropriate array
         # will later need to re-add in the case of pawn promotion
