@@ -42,14 +42,14 @@ class Board
         wBishop2 = Bishop.new("White","\u265D",61)
         wQueen = Queen.new("White","\u265B",59)
         wKing = King.new("White","\u265A",60)
-        @board = [[bRook1,bKnight1,bBishop1,bQueen,bKing,bBishop2,bKnight2,bRook2],
-        		  [bPawn1,bPawn2,bPawn3,bPawn4,bPawn5,bPawn6,bPawn7,bPawn8],
+        @board = [[nil,bKnight1,bBishop1,bPawn1,bKing,bBishop2,bKnight2,bRook2],
+        		  [wPawn1,bPawn2,bPawn3,bPawn4,nil,bPawn6,bPawn7,bPawn8],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
-        		  [wPawn1,wPawn2,wPawn3,wPawn4,wPawn5,wPawn6,wPawn7,wPawn8],
-        		  [wRook1,wKnight1,wBishop1,wQueen,wKing,wBishop2,wKnight2,wRook2]]
+        		  [nil,wPawn2,wPawn3,wPawn4,nil,wPawn6,wPawn7,wPawn8],
+        		  [nil,wKnight1,wBishop1,wQueen,wKing,wBishop2,wKnight2,wRook2]]
         @whitePieces = @board[6][0..7] + @board[7][0..7]
         @blackPieces = @board[0][0..7] + @board[1][0..7]
         @file = ["a","b","c","d","e","f","g","h"]
@@ -104,5 +104,63 @@ class Board
             puts ""
         end
         puts ""
+    end
+
+    def pawnPromotion (type,position)
+        x = position / 8
+        y = position % 8
+        piece = @board[x][y]
+
+        if (piece.color == "Black")
+            # need to get position in array of the promoted pawn
+            oldPawn = 0
+            for i in 0..whitePieces.length-1
+                if (whitePieces[i].position == position)
+                    oldPawn = i
+                end
+            end
+            # update the board and array with the appropriate piece
+            if (type == "rook")
+                bRook3 = Rook.new("Black","\u2656",position)
+                @board[x][y] = bRook3
+                blackPieces[oldPawn] = bRook3
+            elsif (type == "knight")
+                bKnight3 = Knight.new("Black","\u2658",position)
+                @board[x][y] = bKnight3
+                blackPieces[oldPawn] = bKnight3
+            elsif (type == "bishop")
+                bBishop3 = Bishop.new("Black","\u2657",position)
+                @board[x][y] = bBishop3
+                blackPieces[oldPawn] = bBishop3
+            else
+                bQueen2 = Queen.new("Black","\u2655",position)
+                @board[x][y] = bQueen2
+                blackPieces[oldPawn] = bQueen2
+            end
+        else
+            oldPawn = 0
+            for i in 0..whitePieces.length-1
+                if (whitePieces[i].position == position)
+                    oldPawn = i
+                end
+            end
+            if (type == "rook")
+                wRook3 = Rook.new("White","\u265C",position)
+                @board[x][y] = wRook3
+                whitePieces[oldPawn] = wRook3
+            elsif (type == "knight")
+                wKnight3 = Knight.new("White","\u265E",position)
+                @board[x][y] = wKnight3
+                whitePieces[oldPawn] = wKnight3
+            elsif (type == "bishop")
+                wBishop3 = Bishop.new("White","\u265D",position)
+                @board[x][y] = wBishop3
+                whitePieces[oldPawn] = wBishop3
+            else
+                wQueen2 = Queen.new("White","\u265B",position)
+                @board[x][y] = wQueen2
+                whitePieces[oldPawn] = wQueen2
+            end
+        end
     end
 end
