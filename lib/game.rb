@@ -145,6 +145,39 @@ class Game
 		end
 	end
 
+	def checkPromotion (piece)
+		pieces = ["rook","knight","bishop","queen"]
+
+		if (piece.type == "Pawn")
+			if (piece.color == "Black")
+				# get x coord of position, see if pawn has made it to the other side
+				if (piece.position/8 == 7)
+					puts "What piece do you want to promote pawn to?"
+					promotion = gets.chomp
+
+					while !(pieces.include?(promotion.downcase))
+						puts "Not a valid piece. Try again"
+						promotion = gets.chomp
+					end
+					return promotion
+				end
+			else
+				if (piece.position/8 == 0)
+					puts "What piece do you want to promote pawn to?"
+					promotion = gets.chomp
+
+					while !(pieces.include?(promotion.downcase))
+						puts "Not a valid piece. Try again"
+						promotion = gets.chomp
+					end
+					return promotion
+				end
+			end
+		else
+			return nil
+		end
+	end
+
 	def gameLoop
 		activeKing = @kingWhite
 		check = false
@@ -173,8 +206,15 @@ class Game
 			@board.update(@from,to)
 			#@board.display
 
-			# get last piece to move and see if it has put the king in check
+			# get the last piece to move and check for pawn promotion
 			lastMove = @board.pieceAtIndex(to)
+			promotion = checkPromotion(lastMove)
+			if (promotion != nil)
+				@board.pawnPromotion(promotion.downcase,lastMove.position)
+				puts @board.whitePieces[0].toString
+			end
+
+			@player.switchPlayer
 			activeKing = switchKing(activeKing)
 
 			if (activeKing.check(activeKing.position,@board.board) == true)
@@ -182,9 +222,9 @@ class Game
 				check = true
 			end
 
-			@player.switchPlayer
+			# checkmate has some sort of problem. something do to with calling isLegal on nil
+			#checkmate = isCheckmate(@player,activeKing)
 
-			checkmate = isCheckmate(@player,activeKing)
 			@board.display
 		end
 
