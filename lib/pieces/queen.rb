@@ -53,9 +53,9 @@ class Queen < Piece
 				northWestMoves(fromX,fromY,toX,toY)
 			elsif (dirX < 0 && dirY > 0)
 				northEastMoves(fromX,fromY,toX,toY)
-			elsif (dirY > 0 && dirY < 0)
+			elsif (dirX > 0 && dirY < 0)
 				southWestMoves(fromX,fromY,toX,toY)
-			elsif (dirY > 0 && dirY > 0)
+			elsif (dirX > 0 && dirY > 0)
 				southEastMoves(fromX,fromY,toX,toY)
 			end
 		end
