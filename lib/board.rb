@@ -42,14 +42,14 @@ class Board
         wBishop2 = Bishop.new("White","\u265D",61)
         wQueen = Queen.new("White","\u265B",59)
         wKing = King.new("White","\u265A",60)
-        @board = [[nil,bKnight1,bBishop1,bPawn1,bKing,bBishop2,bKnight2,bRook2],
-        		  [wPawn1,bPawn2,bPawn3,bPawn4,nil,bPawn6,bPawn7,bPawn8],
+        @board = [[bRook1,bKnight1,bBishop1,bQueen,bKing,bBishop2,bKnight2,bRook2],
+        		  [bPawn1,bPawn2,bPawn3,bPawn4,bPawn5,bPawn6,bPawn7,bPawn8],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
         		  [nil,nil,nil,nil,nil,nil,nil,nil],
-        		  [nil,wPawn2,wPawn3,wPawn4,nil,wPawn6,wPawn7,wPawn8],
-        		  [nil,wKnight1,wBishop1,wQueen,wKing,wBishop2,wKnight2,wRook2]]
+        		  [wPawn1,wPawn2,wPawn3,wPawn4,wPawn5,wPawn6,wPawn7,wPawn8],
+        		  [wRook1,wKnight1,wBishop1,wQueen,wKing,wBishop2,wKnight2,wRook2]]
         @whitePieces = @board[6][0..7] + @board[7][0..7]
         @blackPieces = @board[0][0..7] + @board[1][0..7]
         @file = ["a","b","c","d","e","f","g","h"]
