@@ -223,7 +223,7 @@ class Game
 			end
 
 			# checkmate has some sort of problem. something do to with calling isLegal on nil
-			#checkmate = isCheckmate(@player,activeKing)
+			checkmate = isCheckmate(@player,activeKing)
 
 			@board.display
 		end
