@@ -145,43 +145,11 @@ class Game
 		end
 	end
 
-	def checkPromotion (piece)
-		pieces = ["rook","knight","bishop","queen"]
-
-		if (piece.type == "Pawn")
-			if (piece.color == "Black")
-				# get x coord of position, see if pawn has made it to the other side
-				if (piece.position/8 == 7)
-					puts "What piece do you want to promote pawn to?"
-					promotion = gets.chomp
-
-					while !(pieces.include?(promotion.downcase))
-						puts "Not a valid piece. Try again"
-						promotion = gets.chomp
-					end
-					return promotion
-				end
-			else
-				if (piece.position/8 == 0)
-					puts "What piece do you want to promote pawn to?"
-					promotion = gets.chomp
-
-					while !(pieces.include?(promotion.downcase))
-						puts "Not a valid piece. Try again"
-						promotion = gets.chomp
-					end
-					return promotion
-				end
-			end
-		else
-			return nil
-		end
-	end
-
 	def gameLoop
 		activeKing = @kingWhite
 		check = false
 		checkmate = false
+		enPass = nil
 
 		@board.display
 
@@ -191,6 +159,7 @@ class Game
 
 			@board.update(@from,to)
 
+			# prevent moves that put yourself in check
 			if (activeKing.check(activeKing.position,@board.board) == true)
 				puts "That move leaves you in check. Try a different move"
 
@@ -202,16 +171,19 @@ class Game
 				check = false
 			end
 
-			# end of turn. update and display board
+			# update once we have a valid from/to
 			@board.update(@from,to)
-			#@board.display
 
-			# get the last piece to move and check for pawn promotion
-			lastMove = @board.pieceAtIndex(to)
-			promotion = checkPromotion(lastMove)
-			if (promotion != nil)
-				@board.pawnPromotion(promotion.downcase,lastMove.position)
-				puts @board.whitePieces[0].toString
+			# get the current piece to move and and if it's a pawn, check for en passant and promotion
+			currentMove = @board.pieceAtIndex(to)
+			if (currentMove.type == "Pawn")
+				enPass = currentMove.getEnPassantSquare
+				puts enPass
+
+				promotion = currentMove.checkPromotion
+				if (promotion != nil)
+					@board.pawnPromotion(promotion.downcase,currentMove.position)
+				end
 			end
 
 			@player.switchPlayer
@@ -222,7 +194,6 @@ class Game
 				check = true
 			end
 
-			# checkmate has some sort of problem. something do to with calling isLegal on nil
 			checkmate = isCheckmate(@player,activeKing)
 
 			@board.display
@@ -233,20 +204,5 @@ class Game
 	end
 end
 
-# checkmate
-# apparently all i need to do is check every possible move for each piece (the current player's array of pieces)
-	# might want to update player class to include that, to make it easier
-# generateMoves will get a list of every possible move in the piece's relevant directions (as an index on the board)
-	# currently gets every square in applicable directions. need to filter out squares that are occpuied by your own pieces
-# then loop through path, update, check for check, then undo update
-
-# probably want to check the king first. if it can move, we can stop there
-# actually it doesn't matter. if any piece can move, we can stop
-
 g = Game.new
 g.gameLoop
-
-# check
-# need to prevent king from moving if it would put itself in check
-# and actually, need to prevent any move that would put self in check
-# then, at the end of the turn, check for check to start the checkmate process
