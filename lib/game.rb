@@ -16,6 +16,7 @@ class Game
                         "a7","b7","c7","d7","e7","f7","g7","h7",
                         "a8","b8","c8","d8","e8","f8","g8","h8"]
         @from 		# needs to be global because of the way i handle input in getTo
+        @enPass = nil
 	end
 
 	def getFrom (player)
@@ -60,7 +61,12 @@ class Game
 				redo
 			end
 
+			# get the piece at the given input, find its legal moves, and see if the input is included in the legal moves
+			# if it is, return coord to update the board
+			# if it isn't, ask for another input
 			piece = @board.pieceAtIndex(@from)
+			# piece.findLegalMoves(@board.board)
+
 			# if the king is trying to casle, call its castle function
 			if (piece.type == "King")
 				if ((@from-coord).abs == 2)
@@ -84,15 +90,19 @@ class Game
 						@from = getFrom(player)
 					end
 				else
-					if (piece.isLegal(@from,coord,@board.board) == true)
+					# not trying to castle, just handle input for king normally
+					if (piece.isLegal(coord,@board.board) == true)
 						checkInput = true
 						return coord
+					else
+						puts "Can't move that piece there. Pick a different piece"
+						@from = getFrom(player)
 					end
 				end
 			# call the piece's isLegal function, give it the from/to, and determine whether the player can make that move
 			# if they can, return coord (as to)
 			# if they can't, ask them to move a different piece and call getFrom again
-			elsif (piece.isLegal(@from,coord,@board.board) == true)
+			elsif (piece.isLegal(coord,@board.board) == true)
 				checkInput = true
 				return coord
 			else
@@ -113,16 +123,27 @@ class Game
 	def isCheckmate(currentPlayer,currentKing)
 		if (currentPlayer.color == "White")
 			@board.whitePieces.each do |i|
-				piecePosition = i.position 		# need a variable for position, because the pieces update their position when the board updates
-				i.findLegalMoves(@board.board)
+				# need a variable for position, because the pieces update their position when the board updates
+				piecePosition = i.position
+				i.generateMoves(@board.board)
 
 				i.legalMoves.each do |j|
-					@board.update(piecePosition,j)
-					if (currentKing.check(currentKing.position,@board.board) == false)
-						@board.update(j,piecePosition)
-						return false
+					j.each do |k|
+						# get a different copy of the board for each possible move
+						tempBoard = @board.tempUpdate(@board.board,piecePosition,k)
+
+						if (i.type == "King")
+							# king wasn't being put in check correctly because its position wasn't updating for the temp move
+							currentKing.position = k
+						end
+						if (currentKing.check(tempBoard) == false)
+							return false
+						end
 					end
-					@board.update(j,piecePosition)
+					# reset king to its original position
+					if (i.type == "King")
+						currentKing.position = piecePosition
+					end
 				end
 			end
 			# if we get through the whole array and king was always in check, it's checkmate
@@ -130,15 +151,22 @@ class Game
 		else
 			@board.blackPieces.each do |i|
 				piecePosition = i.position
-				i.findLegalMoves(@board.board)
+				i.generateMoves(@board.board)
 
 				i.legalMoves.each do |j|
-					@board.update(piecePosition,j)
-					if (currentKing.check(currentKing.position,@board.board) == false)
-						@board.update(j,piecePosition)
-						return false
+					j.each do |k|
+						tempBoard = @board.tempUpdate(@board.board,piecePosition,k)
+
+						if (i.type == "King")
+							currentKing.position = k
+						end
+						if (currentKing.check(tempBoard) == false)
+							return false
+						end
 					end
-					@board.update(j,piecePosition)
+					if (i.type == "King")
+						currentKing.position = piecePosition
+					end
 				end
 			end
 			return true
@@ -147,9 +175,7 @@ class Game
 
 	def gameLoop
 		activeKing = @kingWhite
-		check = false
 		checkmate = false
-		enPass = nil
 
 		@board.display
 
@@ -160,26 +186,23 @@ class Game
 			@board.update(@from,to)
 
 			# prevent moves that put yourself in check
-			if (activeKing.check(activeKing.position,@board.board) == true)
+			if (activeKing.check(@board.board) == true)
 				puts "That move leaves you in check. Try a different move"
-
+				# undo update if the move is illegal
 				@board.update(to,@from)
-				@from = getFrom(@player)
-				to = getTo(@player)
+				redo
 			else
 				@board.update(to,@from)
-				check = false
 			end
 
-			# update once we have a valid from/to
+			# update for real once we have a valid from/to
 			@board.update(@from,to)
 
-			# get the current piece to move and and if it's a pawn, check for en passant and promotion
+			# get the current piece to move. if it's a pawn, check for en passant and promotion
 			currentMove = @board.pieceAtIndex(to)
+			# set hasMoved here because it's the surest way to know a piece has moved, once a valid input has gotten and the board updated
+			currentMove.hasMoved = true
 			if (currentMove.type == "Pawn")
-				enPass = currentMove.getEnPassantSquare
-				puts enPass
-
 				promotion = currentMove.checkPromotion
 				if (promotion != nil)
 					@board.pawnPromotion(promotion.downcase,currentMove.position)
@@ -189,12 +212,11 @@ class Game
 			@player.switchPlayer
 			activeKing = switchKing(activeKing)
 
-			if (activeKing.check(activeKing.position,@board.board) == true)
+			# if king is in check, then check for checkmate
+			if (activeKing.check(@board.board) == true)
 				puts "#{activeKing.color} King in check"
-				check = true
+				checkmate = isCheckmate(@player,activeKing)
 			end
-
-			checkmate = isCheckmate(@player,activeKing)
 
 			@board.display
 		end
