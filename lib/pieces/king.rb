@@ -1,101 +1,80 @@
 require_relative "../piece"
 
 class King < Piece
-	def initialize (color,unicode,pos)
+	def initialize (color,unicode)
 		super
 		@type = "King"
 		@unicode = unicode
-	end
-
-	def validateMove (from,to)
-		fromX = from / 8
-		fromY = from % 8
-		toX = to / 8
-		toY = to % 8
-
-		if (@board[toX][toY] == nil || @board[toX][toY].color != self.color)
-			if ((fromX-toX).abs == 1 && fromY-toY == 0)
-				return true
-			elsif (fromX-toX == 0 && (fromY-toY).abs == 1)
-				return true
-			elsif ((fromX-toX).abs == (fromY-toY).abs && (fromX-toX).abs == 1)
-				return true
-			else
-				return false
-			end
-		else
-			return false
-		end
-	end
-
-	def movePath (from,to)
-		# doesn't need a path, but still needs a function to call
-		@path = [[]]
 	end
 
 	def generateMoves (board)
 		xPos = @position / 8
 		yPos = @position % 8
 
-		# make sure to stay in board bounds
-		if (xPos-1 >= 0)
-			northMoves(xPos,yPos,xPos-1)
+		@legalMoves = []
+
+		northMoves(xPos,yPos)
+		southMoves(xPos,yPos)
+		eastMoves(xPos,yPos)
+		westMoves(xPos,yPos)
+		northEastMoves(xPos,yPos)
+		northWestMoves(xPos,yPos)
+		southEastMoves(xPos,yPos)
+		southWestMoves(xPos,yPos)
+
+		@legalMoves.delete([])
+
+		# filter out everything beyond the first square in each direction, since the king can only move one square
+		for i in 0..@legalMoves.length-1
+			@legalMoves[i].slice!(1..@legalMoves[i].length-1)
 		end
-		if (xPos+1 <= 7)
-			southMoves(xPos,yPos,xPos+1)
-		end
-		if (yPos+1 <= 7)
-			eastMoves(xPos,yPos,yPos+1)
-		end
-		if (yPos-1 >= 0)
-			westMoves(xPos,yPos,yPos-1)
-		end
-		if (xPos-1 >= 0 && yPos+1 <= 7)
-			northEastMoves(xPos,yPos,xPos-1,yPos+1)
-		end
-		if (xPos-1 >= 0 && yPos-1 >= 0)
-			northWestMoves(xPos,yPos,xPos-1,yPos-1)
-		end
-		if (xPos+1 <= 7 && yPos+1 <= 7)
-			southEastMoves(xPos,yPos,xPos+1,yPos+1)
-		end
-		if (xPos+1 <= 7 && yPos-1 >= 0)
-			southWestMoves(xPos,yPos,xPos+1,yPos-1)
-		end
+
+		# then filter out same colored pieces like normal
+		filterMoves(board)
 	end
 
-	def check (position,board)
-		xPos = position / 8
-		yPos = position % 8
-		@path = []
+	def check (board)
+		xPos = self.position / 8
+		yPos = self.position % 8
+		@legalMoves = []
 
-		northMoves(xPos,yPos,0)
-		southMoves(xPos,yPos,7)
-		eastMoves(xPos,yPos,7)
-		westMoves(xPos,yPos,0)
+		northMoves(xPos,yPos)
+		southMoves(xPos,yPos)
+		eastMoves(xPos,yPos)
+		westMoves(xPos,yPos)
+
 		if (orthogonalCheck(board) == true)
+			@legalMoves = []
 			return true
 		end
 
-		northEastMoves(xPos,yPos,0,7)
-		northWestMoves(xPos,yPos,0,0)
+		northEastMoves(xPos,yPos)
+		northWestMoves(xPos,yPos)
+
 		if (northDiagonalCheck(board) == true)
+			@legalMoves = []
 			return true
 		end
 
-		southEastMoves(xPos,yPos,7,7)
-		southWestMoves(xPos,yPos,7,0)
-		southDiagonalCheck(board)
+		southEastMoves(xPos,yPos)
+		southWestMoves(xPos,yPos)
+
+		if (southDiagonalCheck(board) == true)
+			@legalMoves = []
+			return true
+		end
 
 		knightMoves(position)
 		if (knightCheck(board) == true)
+			@legalMoves = []
 			return true
 		end
+		@legalMoves = []
 		return false
 	end
 
 	def orthogonalCheck (board)
-		@path.each do |i|
+		@legalMoves.each do |i|
 			i.each do |j|
 				x = j / 8
 				y = j % 8
@@ -108,13 +87,13 @@ class King < Piece
 				end
 			end
 		end
-		@path = []
+		# @legalMoves = []
 		return false
 	end
 
 	# two different diagonal checks because i need to check for two different types of pawns
 	def northDiagonalCheck (board)
-		@path.each do |i|
+		@legalMoves.each do |i|
 			if (i[0] != nil)
 				x = i[0] / 8
 				y = i[0] % 8
@@ -138,12 +117,12 @@ class King < Piece
 				end
 			end
 		end
-		@path = []
+		#@legalMoves = []
 		return false
 	end
 
 	def southDiagonalCheck (board)
-		@path.each do |i|
+		@legalMoves.each do |i|
 			if (i[0] != nil)
 				x = i[0] / 8
 				y = i[0] % 8
@@ -166,12 +145,12 @@ class King < Piece
 				end
 			end
 		end
-		@path = []
+		#@legalMoves = []
 		return false
 	end
 
 	def knightCheck (board)
-		@path.each do |i|
+		@legalMoves.each do |i|
 			i.each do |j|
 				x = j / 8
 				y = j % 8
@@ -182,7 +161,7 @@ class King < Piece
 				end
 			end
 		end
-		@path = []
+		#@legalMoves = []
 		return false
 	end
 
