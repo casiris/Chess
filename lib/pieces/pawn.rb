@@ -1,123 +1,76 @@
 require_relative "../piece"
 
 class Pawn < Piece
-	def initialize (color,unicode,pos)
+	attr_reader :enPassant
+
+	def initialize (color,unicode)
 		super
 		@type = "Pawn"
 		@unicode = unicode
-		@enPassant = false
-	end
-
-	def validateMove (from,to)
-		if ((from % 8) - (to % 8) == 0)		# if no change in y, we know we're only moving up or down
-			return moveForward(from,to)
-		else
-			return capture(from,to)
-		end
-	end
-
-	def moveForward (from,to)
-		fromX = from / 8
-		fromY = from % 8
-		toX = to / 8
-		toY = to % 8
-
-		if (@board[toX][toY] == nil)
-			if (self.hasMoved == false)
-				if (self.color == "Black")
-					if (toX-fromX == 1)
-						return true
-					elsif (toX-fromX == 2)
-						@enPassant = true
-						return true
-					end
-				elsif (self.color == "White")
-					if (toX-fromX == -1)
-						return true
-					elsif (toX-fromX == -2)
-						@enPassant = true
-						return true
-					end
-				else
-					return false
-				end
-			else
-				if (self.color == "Black" && toX-fromX == 1)
-					return true
-				elsif (self.color == "White" && toX-fromX == -1)
-					return true
-				else
-					return false
-				end
-			end
-		else
-			return false
-		end
-	end
-
-	def capture (from,to)
-		fromX = from / 8
-		fromY = from % 8
-		toX = to / 8
-		toY = to % 8
-
-		# it's a mess but it works
-		if (@board[toX][toY] != nil)
-			if (@board[toX][toY].color != self.color)
-				if (self.color == "Black")
-					if (toX-fromX == 1 && (toY-fromY).abs == 1)
-						return true
-					else 
-						return false
-					end
-				else
-					if (toX-fromX == -1 && (toY-fromY).abs == 1)
-						return true
-					else
-						return false
-					end
-				end
-			else
-				return false
-			end
-		else
-			return false
-		end
-	end
-
-	def movePath (from,to)
-		# doesn't need a path, but still needs a function to call
-		@path = [[]]
+		@enPassant = nil
 	end
 
 	def generateMoves (board)
 		posX = @position / 8
 		posY = @position % 8
 
+		# clear legalMoves so there's nothing left over after the last move
+		@legalMoves = []
+		
 		if (self.color == "Black")
-			if (posX+1 <= 7)
-				southMoves(posX,posY,posX+1)
-			end
-			if (posX+1 <= 7 && posY+1 <= 7)
-				southEastMoves(posX,posY,posX+1,posY+1)
-			end
-			if (posX+1 <= 7 && posY >= 0)
-				southWestMoves(posX,posY,posX+1,posY-1)
-			end
+			southMoves(posX,posY)
+			southEastMoves(posX,posY)
+			southWestMoves(posX,posY)
 		else
-			if (posX-1 >= 0)
-				northMoves(posX,posY,posX-1)
-			end
-			if (posX-1 >= 0 && posY+1 <= 7)
-				northEastMoves(posX,posY,posX-1,posY+1)
-			end
-			if (posX-1 >= 0 && posY-1 >= 0)
-				northWestMoves(posX,posY,posX-1,posY-1)
+			northMoves(posX,posY)
+			northEastMoves(posX,posY)
+			northWestMoves(posX,posY)
+		end
+
+		@legalMoves.delete([])
+
+		filterPawnMoves(board)
+	end
+
+	def filterPawnMoves (board)
+		# remove everything past the second position on the north/south
+		@legalMoves[0].slice!(2..@legalMoves[0].length-1)
+		# and remove the second if pawn has already moved
+		if (@hasMoved == true)
+			@legalMoves[0].slice!(1..@legalMoves[0].length-1)
+		end
+		# then remove any position that's occupied, whether by a same colored piece or opposite colored piece
+		for i in 0..@legalMoves[0].length-1
+			x = @legalMoves[0][i] / 8
+			y = @legalMoves[0][i] % 8
+
+			if (board[x][y] != nil)
+				@legalMoves[0].slice!(i..@legalMoves[i].length-1)
+
+				# if the first position is occupied, then pawn can't move to the second either, so we remove it too
+				# but the possible second iteration of the loop still has to run, but there's nothing left, so break out
+				if (i == 0)
+					break
+				end
 			end
 		end
 
-		# removes emtpy arrays that exist thanks to movePath
-		@path.delete([])
+		# remove everything past the first position on the diagonals
+		for i in 1..@legalMoves.length-1
+			@legalMoves[i].slice!(1..@legalMoves[i].length-1)
+
+			# then remove any empty position, or a position where there is a same colored piece
+			x = @legalMoves[i][0] / 8
+			y = @legalMoves[i][0] % 8
+
+			if (board[x][y] == nil)
+				@legalMoves[i].delete(@legalMoves[i][0])
+			elsif (board[x][y].color == self.color)
+				@legalMoves[i].delete(@legalMoves[i][0])
+			end
+		end
+
+		@legalMoves.delete([])
 	end
 
 	def checkPromotion
@@ -149,24 +102,4 @@ class Pawn < Piece
 		end
 		return nil
 	end
-
-	def getEnPassantSquare
-		if (@enPassant == true)
-			if (self.color == "Black")
-				# don't need to worry about bounds checking, since enPassant will only be true on the intial move, and +-10 won't be offboard
-				return self.position-8
-			else
-				return self.position+8
-			end
-		else
-			return nil
-		end
-	end
 end
-
-# en passant
-# can only capture en passant on the very next turn, and yes, it can only be opposing pawns
-
-# have a function that returns true when a pawn moves 2 squares, and have game check for that in the game loop
-# get lastMove, and if it's a pawn (and enPassant is true), then see if that pawn can capture en passant
-# which means that the en passant square would be on the same horizontal as lastMove
