@@ -36,6 +36,23 @@ class Game
 			piece = @board.pieceAtIndex(coord)
 
 			if (piece != nil)
+				# handle en passant here, before the player decides where to move the pawn
+				if (piece.type == "Pawn")
+					if (@enPass != nil)
+						fromX = coord / 8
+						fromY = coord % 8
+						epX = @enPass / 8
+						epY = @enPass % 8
+
+						if ((fromX-epX).abs == 1 && (fromY-epY).abs == 1)
+							puts "en pass applicable"
+							# need to add ep square as an array
+							ep = []
+							ep << @enPass
+							piece.legalMoves << ep
+						end
+					end
+				end
 				if (piece.color == player.color)
 					checkInput = false
 					return coord
@@ -61,11 +78,7 @@ class Game
 				redo
 			end
 
-			# get the piece at the given input, find its legal moves, and see if the input is included in the legal moves
-			# if it is, return coord to update the board
-			# if it isn't, ask for another input
 			piece = @board.pieceAtIndex(@from)
-			# piece.findLegalMoves(@board.board)
 
 			# if the king is trying to casle, call its castle function
 			if (piece.type == "King")
@@ -98,6 +111,35 @@ class Game
 						puts "Can't move that piece there. Pick a different piece"
 						@from = getFrom(player)
 					end
+				end
+			elsif (piece.type == "Pawn")
+				# if pawn is capturing en passant square, we need to remove the appropriate pawn
+				# loop through opposite piece array and find/delete pawn with the same ep square
+				if (coord == @enPass)
+					if (@player.color == "Black")
+						@board.whitePieces.each do |i|
+							if (i.type == "Pawn")
+								if (i.enPassant == coord)
+									@board.whitePieces.delete(i)
+								end
+							end
+						end
+					else
+						@board.blackPieces.each do |i|
+							if (i.type == "Pawn")
+								if (i.enPassant == coord)
+									@board.blackPieces.delete(i)
+								end
+							end
+						end
+					end
+				end
+				if (piece.isLegal(coord,@board.board) == true)
+					checkInput = true
+					return coord
+				else
+					puts "Can't move that piece there. Pick a different piece"
+					@from = getFrom(player)
 				end
 			# call the piece's isLegal function, give it the from/to, and determine whether the player can make that move
 			# if they can, return coord (as to)
@@ -174,6 +216,7 @@ class Game
 	end
 
 	def gameLoop
+		currentMove = nil
 		activeKing = @kingWhite
 		checkmate = false
 
@@ -198,16 +241,37 @@ class Game
 			# update for real once we have a valid from/to
 			@board.update(@from,to)
 
+			# this will only be not nil from the second turn onwards
+			# so at this point, before setting currentMove, this basically acts as the previous move
+			# so we'll reset the pawn's en passant square here, after we've gotten a valid move and the ep square is no longer valid
+			if (currentMove != nil)
+				if (currentMove.type == "Pawn")
+					currentMove.enPassant = nil
+				end
+			end
+
 			# get the current piece to move. if it's a pawn, check for en passant and promotion
 			currentMove = @board.pieceAtIndex(to)
-			# set hasMoved here because it's the surest way to know a piece has moved, once a valid input has gotten and the board updated
-			currentMove.hasMoved = true
 			if (currentMove.type == "Pawn")
 				promotion = currentMove.checkPromotion
 				if (promotion != nil)
 					@board.pawnPromotion(promotion.downcase,currentMove.position)
 				end
+
+				# get en passant if applicable
+				if ((@from-to).abs == 16)
+					@enPass = currentMove.getEnPassant
+				# if player moves pawn but doesn't move two squares, reset en passant square
+				else
+					@enPass = nil
+				end
+			# if player moves a piece besides a pawn, reset en passant square
+			elsif (currentMove.type != "Pawn")
+				@enPass = nil
 			end
+
+			# set hasMoved here because it's the surest way to know a piece has moved, once a valid input has gotten and the board updated
+			currentMove.hasMoved = true
 
 			@player.switchPlayer
 			activeKing = switchKing(activeKing)
