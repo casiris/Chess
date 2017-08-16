@@ -1,7 +1,7 @@
 require_relative "../piece"
 
 class Pawn < Piece
-	attr_reader :enPassant
+	attr_accessor :enPassant
 
 	def initialize (color,unicode)
 		super
@@ -13,9 +13,6 @@ class Pawn < Piece
 	def generateMoves (board)
 		posX = @position / 8
 		posY = @position % 8
-
-		# clear legalMoves so there's nothing left over after the last move
-		@legalMoves = []
 		
 		if (self.color == "Black")
 			southMoves(posX,posY)
@@ -101,5 +98,15 @@ class Pawn < Piece
 			end
 		end
 		return nil
+	end
+
+	def getEnPassant
+		if (self.color == "Black")
+			@enPassant = self.position-8
+			return @enPassant
+		else
+			@enPassant = self.position+8
+			return @enPassant
+		end
 	end
 end
