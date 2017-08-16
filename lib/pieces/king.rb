@@ -44,29 +44,28 @@ class King < Piece
 		westMoves(xPos,yPos)
 
 		if (orthogonalCheck(board) == true)
-			@legalMoves = []
 			return true
 		end
+		@legalMoves = []
 
 		northEastMoves(xPos,yPos)
 		northWestMoves(xPos,yPos)
 
 		if (northDiagonalCheck(board) == true)
-			@legalMoves = []
 			return true
 		end
+		@legalMoves = []
 
 		southEastMoves(xPos,yPos)
 		southWestMoves(xPos,yPos)
 
 		if (southDiagonalCheck(board) == true)
-			@legalMoves = []
 			return true
 		end
+		@legalMoves = []
 
-		knightMoves(position)
+		knightMoves(self.position)
 		if (knightCheck(board) == true)
-			@legalMoves = []
 			return true
 		end
 		@legalMoves = []
@@ -161,7 +160,6 @@ class King < Piece
 				end
 			end
 		end
-		#@legalMoves = []
 		return false
 	end
 
@@ -171,9 +169,10 @@ class King < Piece
 		toX = to / 8
 		toY = to % 8
 		castlePath = []
+		startPos = self.position
 
 		# king side castle
-		if ((fromY-toY).abs == 2)
+		if (toY-fromY == 2)
 			rook = board[fromX][fromY+3]
 			
 			if (self.hasMoved == false && rook.hasMoved == false)
@@ -191,17 +190,21 @@ class King < Piece
 					end
 				end
 				# call check for every position in path
+				# if any are in check, king can't castle
 				castlePath.each do |i|
-					if (check(i,board) == false)
-						return true
-					else
+					self.position = i
+					if (check(board) == true)
+						self.position = startPos
 						return false
 					end
 				end
+				self.position = startPos
+				return true
 			else
 				return false
 			end
-		else	# queen side castle
+		# queen side castle
+		elsif (toY-fromY == -3)
 			rook = board[fromX][fromY-4]
 			
 			if (self.hasMoved == false && rook.hasMoved == false)
@@ -217,12 +220,14 @@ class King < Piece
 					end
 				end
 				castlePath.each do |i|
-					if (check(i,board) == false)
-						return true
-					else
+					self.position = i
+					if (check(board) == true)
+						self.position = startPos
 						return false
 					end
 				end
+				self.position = startPos
+				return true
 			else
 				return false
 			end
