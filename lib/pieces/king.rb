@@ -11,8 +11,6 @@ class King < Piece
 		xPos = @position / 8
 		yPos = @position % 8
 
-		@legalMoves = []
-
 		northMoves(xPos,yPos)
 		southMoves(xPos,yPos)
 		eastMoves(xPos,yPos)

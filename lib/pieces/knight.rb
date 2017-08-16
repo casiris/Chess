@@ -8,8 +8,6 @@ class Knight < Piece
 	end
 
 	def generateMoves (board)
-		@legalMoves = []
-		
 		knightMoves(@position)
 		@legalMoves.delete([])
 

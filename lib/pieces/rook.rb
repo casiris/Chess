@@ -11,8 +11,6 @@ class Rook < Piece
 		posX = @position / 8
 		posY = @position % 8
 
-		@legalMoves = []
-
 		northMoves(posX,posY)
 		southMoves(posX,posY)
 		eastMoves(posX,posY)

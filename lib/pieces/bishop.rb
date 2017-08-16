@@ -11,8 +11,6 @@ class Bishop < Piece
 		posX = @position / 8
 		posY = @position % 8
 
-		@legalMoves = []
-
 		northWestMoves(posX,posY)
 		northEastMoves(posX,posY)
 		southWestMoves(posX,posY)
