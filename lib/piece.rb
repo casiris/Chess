@@ -19,11 +19,14 @@ class Piece
 		@legalMoves.each do |i|
 			i.each do |j|
 				if (to == j)
+					# clear legalMoves after we're done so there's nothing left over before the next move
+					@legalMoves = []
 					return true
 				end
 			end
 		end
 
+		@legalMoves = []
 		return false
 	end
 
@@ -222,18 +225,3 @@ class Piece
 		@legalMoves << kp1 << kp2 << kp3 << kp4 << kp5 << kp6 << kp7 << kp8
 	end
 end
-
-# fuck en passant
-# i'm just gonna have to redo movement
-# when determining if a player can make a move, just check if "to" is included in the list of legal moves
-# generateMoves gets all possible moves
-# isLegal just filters out obstructed squares and the like
-# change directions slightly. i don't think a "to" is necessary. can just go from "from" to 0 or 7
-# and in the case of diagonals, once either reaches 0 or 7, stop
-
-# as for en passant, pawn will need to know when it's moving 2 spaces on the first turn, and only then set the ep square
-# so i guess it needs from and to to determine distance
-
-# castling could also be a problem with findLegalMoves
-# maybe just have a condition of if hasMoved == false, then king can move +2 or -3
-# and then in game we can update the king and +3 -4 rook accordingly
